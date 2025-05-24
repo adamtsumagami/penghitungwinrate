@@ -41,19 +41,20 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Pastikan tidak ada scroll pada html/body */
+            overflow: hidden; /* Mencegah scroll pada html/body */
+            font-size: 16px; /* Base font size, will be scaled down for mobile */
         }
 
         body {
             font-family: 'Fira Code', monospace;
             display: flex;
-            flex-direction: column; /* Mengatur item utama (container & watermark) secara vertikal */
-            justify-content: center; /* Memusatkan konten secara vertikal */
-            align-items: center; /* Memusatkan konten secara horizontal */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             background: linear-gradient(135deg, var(--ctp-crust), var(--ctp-base));
             color: var(--ctp-text);
             position: relative;
-            box-sizing: border-box; /* Pastikan padding tidak menambah ukuran total */
+            box-sizing: border-box;
             padding-bottom: 30px; /* Ruang untuk watermark di bagian bawah */
         }
 
@@ -84,25 +85,24 @@
         }
 
         .main-content-wrapper {
-            background-color: rgba(49, 50, 68, 0.7); /* Glassmorphism base */
+            background-color: rgba(49, 50, 68, 0.7);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             
-            padding: 25px; /* Padding utama container */
+            padding: 25px;
             border-radius: 15px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
             border: 1px solid var(--ctp-surface1);
             
             display: flex;
-            flex-direction: column; /* Semua elemen di dalam akan tersusun vertikal */
-            align-items: center; /* Pusatkan secara horizontal */
+            flex-direction: column;
+            align-items: center;
             
-            width: 90vw; /* Lebar relatif terhadap viewport */
-            max-width: 450px; /* Batasi lebar maksimum agar terlihat seperti kartu tunggal */
+            width: 90vw;
+            max-width: 450px; /* Batasi lebar untuk desktop/tablet */
             
-            /* Fleksibilitas tinggi untuk menghindari scroll, sambil memberi batasan */
-            flex-grow: 1; /* Biarkan mengambil ruang yang tersedia */
-            max-height: calc(100vh - 60px); /* Kurangi tinggi untuk watermark di bawah */
+            flex-grow: 1;
+            max-height: calc(100vh - 60px); /* Memperhitungkan padding-bottom body dan watermark */
             overflow-y: auto; /* Izinkan scroll jika konten benar-benar tidak muat */
             box-sizing: border-box;
         }
@@ -111,26 +111,26 @@
             color: var(--ctp-lavender);
             font-size: 1.8em;
             margin-top: 0;
-            margin-bottom: 25px; /* Jarak yang cukup setelah judul */
+            margin-bottom: 25px;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
 
-        .section-box { /* Mengganti input-section dan output-section menjadi satu gaya box */
+        .section-box {
             background-color: var(--ctp-mantle);
             padding: 20px;
             border-radius: 10px;
             border: 1px solid var(--ctp-surface1);
-            width: 100%; /* Ambil lebar penuh dari main-content-wrapper */
+            width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 15px; /* Jarak antar elemen di dalam box */
-            margin-bottom: 15px; /* JARAK DIKECILKAN ANTAR KOTAK */
+            gap: 15px;
+            margin-bottom: 15px;
             box-sizing: border-box;
         }
 
         .section-box:last-of-type {
-            margin-bottom: 0; /* Hapus margin bawah untuk box terakhir */
+            margin-bottom: 0;
         }
 
         .section-title {
@@ -142,7 +142,7 @@
         }
 
         .input-group {
-            margin-bottom: 0; /* Diatur oleh gap parent */
+            margin-bottom: 0;
             text-align: left;
         }
 
@@ -155,7 +155,7 @@
         }
 
         .input-group input[type="number"] {
-            width: calc(100% - 20px); /* Kurangi padding dari total width */
+            width: calc(100% - 20px);
             padding: 8px;
             border: 1px solid var(--ctp-surface1);
             border-radius: 8px;
@@ -165,7 +165,7 @@
             outline: none;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            box-sizing: border-box; /* Penting untuk width calc */
+            box-sizing: border-box;
         }
 
         .input-group input[type="number"]::placeholder {
@@ -188,8 +188,8 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
             width: 100%;
-            margin-top: 15px; /* Jarak di atas tombol, setelah input section */
-            margin-bottom: 15px; /* Jarak di bawah tombol, sebelum output section */
+            margin-top: 15px;
+            margin-bottom: 15px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             box-sizing: border-box;
         }
@@ -232,20 +232,20 @@
 
         /* Watermark Styling */
         .watermark {
-            margin-top: 20px; /* Jarak dari container utama */
-            color: var(--ctp-subtext0); /* Warna teks yang lembut */
+            margin-top: 20px;
+            color: var(--ctp-subtext0);
             font-size: 0.8em;
             text-align: center;
-            position: fixed; /* Membuat watermark tetap di bagian bawah */
-            bottom: 10px; /* Jarak dari bawah viewport */
+            position: fixed;
+            bottom: 10px;
             left: 50%;
-            transform: translateX(-50%); /* Pusatkan secara horizontal */
-            z-index: 100; /* Pastikan di atas elemen lain */
+            transform: translateX(-50%);
+            z-index: 100;
             width: 100%; /* Ambil lebar penuh untuk pusatkan teks */
         }
 
         .watermark a {
-            color: var(--ctp-mauve); /* Warna link */
+            color: var(--ctp-mauve);
             text-decoration: none;
             transition: color 0.3s ease;
         }
@@ -256,69 +256,84 @@
 
         /* --- Media Queries for Responsiveness (HP/Small Screens) --- */
         @media (max-width: 768px) {
+            html, body {
+                font-size: 14px; /* Slightly smaller base font size for tablets/larger phones */
+            }
             body {
-                padding-bottom: 25px; /* Sesuaikan padding bawah untuk watermark di HP */
+                padding-bottom: 25px;
             }
             .main-content-wrapper {
-                padding: 18px;
-                width: 95vw;
+                padding: 15px; /* Kurangi padding di HP */
+                width: 95vw; /* Lebih lebar di HP */
+                max-width: 400px; /* Batasi max-width di HP agar tidak terlalu besar di tablet */
                 max-height: calc(100vh - 55px); /* Sesuaikan tinggi untuk watermark di HP */
+                gap: 10px; /* Kurangi gap antar elemen utama */
             }
             h1 {
-                font-size: 1.5em;
+                font-size: 1.6em; /* Lebih kecil */
                 margin-bottom: 20px;
             }
             .section-box {
-                padding: 15px;
-                gap: 10px;
-                margin-bottom: 12px; /* Disesuaikan untuk HP */
+                padding: 15px; /* Kurangi padding di dalam box */
+                gap: 10px; /* Kurangi gap di dalam box */
+                margin-bottom: 10px; /* Kurangi jarak antar box */
             }
             .section-title {
-                font-size: 1.1em;
-                margin-bottom: 10px;
+                font-size: 1.2em; /* Lebih kecil */
+                margin-bottom: 8px; /* Lebih kecil */
             }
             .input-group label {
-                font-size: 0.8em;
+                font-size: 0.8em; /* Lebih kecil */
             }
             .input-group input[type="number"] {
-                padding: 7px;
-                font-size: 0.85em;
+                padding: 6px; /* Lebih kecil */
+                font-size: 0.9em; /* Lebih kecil */
             }
             button {
-                padding: 10px 15px;
-                font-size: 0.95em;
-                margin-top: 12px; /* Disesuaikan untuk HP */
-                margin-bottom: 12px; /* Disesuaikan untuk HP */
+                padding: 10px 15px; /* Lebih kecil */
+                font-size: 0.95em; /* Lebih kecil */
+                margin-top: 10px; /* Lebih kecil */
+                margin-bottom: 10px; /* Lebih kecil */
             }
             .result-display {
-                font-size: 1em;
-                padding: 7px;
+                font-size: 1em; /* Lebih kecil */
+                padding: 6px; /* Lebih kecil */
+            }
+            .result-display span {
+                font-size: 0.95em; /* Lebih kecil */
             }
             .watermark {
-                font-size: 0.75em;
-                bottom: 5px; /* Lebih mepet ke bawah di HP */
+                font-size: 0.7em; /* Lebih kecil */
+                bottom: 5px;
             }
         }
 
         @media (max-width: 480px) {
+            html, body {
+                font-size: 13px; /* Even smaller base font size for very small phones */
+            }
             .main-content-wrapper {
-                padding: 15px;
+                padding: 12px;
+                width: 98vw; /* Hampir penuh di HP sangat kecil */
+                max-width: none; /* Izinkan mengambil lebar penuh */
                 max-height: calc(100vh - 50px);
+                gap: 8px;
             }
             h1 {
-                font-size: 1.3em;
+                font-size: 1.4em;
                 margin-bottom: 15px;
             }
             .section-box {
                 padding: 12px;
                 gap: 8px;
-                margin-bottom: 10px; /* Disesuaikan untuk sangat kecil */
+                margin-bottom: 8px;
             }
             .section-title {
-                font-size: 1em;
+                font-size: 1.1em;
+                margin-bottom: 6px;
             }
             .input-group label {
-                font-size: 0.7em;
+                font-size: 0.75em;
             }
             .input-group input[type="number"] {
                 padding: 5px;
@@ -327,15 +342,15 @@
             button {
                 padding: 8px 12px;
                 font-size: 0.9em;
-                margin-top: 10px;
-                margin-bottom: 10px;
+                margin-top: 8px;
+                margin-bottom: 8px;
             }
             .result-display {
                 font-size: 0.9em;
                 padding: 5px;
             }
             .watermark {
-                font-size: 0.7em;
+                font-size: 0.65em;
             }
         }
     </style>
@@ -366,7 +381,7 @@
 
         <div class="section-box">
             <h2 class="section-title">Hasil Perhitungan</h2>
-            <p id="matchesNeeded" class="result-display"><span>0</span></p> 
+            <p id="matchesNeeded" class="result-display"></p> 
             </div>
     </div>
 
@@ -379,9 +394,8 @@
             const targetWinrateInput = document.getElementById('targetWinrate');
             
             const matchesNeededElement = document.getElementById('matchesNeeded');
-            const matchesNeededSpan = matchesNeededElement.querySelector('span'); // Ini akan berisi nilai angka saja
             
-            // Reset error state
+            // Reset error state (cukup remove class error)
             matchesNeededElement.classList.remove('error');
 
             const totalMatches = parseFloat(totalMatchesInput.value);
@@ -390,7 +404,7 @@
 
             // --- Validasi Input ---
             if (isNaN(totalMatches) || totalMatches < 0) {
-                matchesNeededElement.textContent = "Total match tidak valid!"; // Mengisi langsung textContent parent p
+                matchesNeededElement.textContent = "Total match tidak valid!";
                 matchesNeededElement.classList.add('error');
                 return;
             }
@@ -438,7 +452,7 @@
                 matchesNeededElement.innerHTML = `Anda sudah mencapai atau melampaui target!`; 
                 matchesNeededElement.classList.remove('error');
             } else {
-                // Diperbaiki: Seluruh teks "Butuh X Win." sekarang dihasilkan oleh JavaScript
+                // Diperbaiki: Seluruh teks termasuk angka dihasilkan oleh JavaScript
                 matchesNeededElement.innerHTML = `Butuh sekitar <span>${Math.ceil(winsNeeded)}</span> Win.`;
             }
         }
