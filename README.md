@@ -1,6 +1,6 @@
 # ⚔️ MLBB Winrate & Target Calculator 🎯
 
-![MLBB Winrate Calculator Screenshot](https://via.placeholder.com/800x450?text=Screenshot+Aplikasi+Anda+Disini)
+![MLBB Winrate Calculator Screenshot](canvas.png)
 *(Ganti placeholder ini dengan screenshot asli aplikasi Anda setelah deploy)*
 
 Sebuah aplikasi web sederhana untuk menghitung winrate Mobile Legends: Bang Bang Anda saat ini dan menentukan berapa banyak kemenangan beruntun yang Anda butuhkan untuk mencapai target winrate tertentu! Dibuat dengan HTML, CSS, dan JavaScript murni, menampilkan desain modern dengan efek glassmorphism dan palet warna Catppuccin yang menawan.
