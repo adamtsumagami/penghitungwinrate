@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penghitung Winrate & Target MLBB</title>
+    <title>Penghitung Winrate & Target MLBB (Johsteven.github.io Logic)</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
         /* Catppuccin Mocha Palette */
@@ -81,7 +81,7 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
             text-align: center;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             border: 1px solid var(--ctp-surface1);
             position: relative;
             z-index: 1;
@@ -89,25 +89,48 @@
             background-color: rgba(49, 50, 68, 0.7);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
         }
 
         h1 {
             color: var(--ctp-lavender);
-            margin-bottom: 25px;
+            margin-bottom: 0;
             font-size: 2.2em;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        h2 {
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .input-section, .output-section {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: var(--ctp-mantle);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--ctp-surface1);
+        }
+
+        .section-title {
             color: var(--ctp-sky);
-            margin-top: 30px;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 0;
             text-align: left;
         }
 
@@ -124,7 +147,7 @@
             padding: 12px;
             border: 1px solid var(--ctp-surface1);
             border-radius: 8px;
-            background-color: var(--ctp-mantle);
+            background-color: var(--ctp-crust);
             color: var(--ctp-text);
             font-size: 1.1em;
             outline: none;
@@ -152,7 +175,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 0;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
@@ -166,159 +189,153 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
-        #result, #targetResult {
-            margin-top: 30px;
-            font-size: 1.6em;
+        .result-display {
+            font-size: 1.3em;
             font-weight: bold;
             color: var(--ctp-yellow);
             padding: 10px;
-            background-color: var(--ctp-surface1);
-            border-radius: 10px;
+            background-color: var(--ctp-crust);
+            border-radius: 8px;
             border: 1px dashed var(--ctp-surface2);
+            text-align: center;
         }
 
-        #result span, #targetResult span {
+        .result-display span {
             color: var(--ctp-pink);
-            font-size: 1.2em;
+            font-size: 1.1em;
         }
 
         /* Error message styling */
         .error {
             color: var(--ctp-red) !important;
+            border-color: var(--ctp-red) !important;
         }
         .error span {
             color: var(--ctp-red) !important;
         }
 
-        /* Separator for clarity */
-        hr {
-            border: none;
-            border-top: 1px dashed var(--ctp-surface2);
-            margin: 40px 0;
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            .input-section, .output-section {
+                min-width: unset;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>⚔️ Hitung Winrate MLBB 🛡️</h1>
+        <h1>⚔️ Penghitung Winrate MLBB 🛡️</h1>
 
-        <div class="input-group">
-            <label for="totalMatches">Total Pertandingan:</label>
-            <input type="number" id="totalMatches" placeholder="Contoh: 1500" min="0">
-        </div>
+        <div class="content-wrapper">
+            <div class="input-section">
+                <h2 class="section-title">Masukkan Data Anda</h2>
+                <div class="input-group">
+                    <label for="totalMatches">Total Match Anda:</label>
+                    <input type="number" id="totalMatches" placeholder="Cth: 259" min="0">
+                </div>
 
-        <div class="input-group">
-            <label for="totalWins">Total Kemenangan:</label>
-            <input type="number" id="totalWins" placeholder="Contoh: 800" min="0">
-        </div>
+                <div class="input-group">
+                    <label for="currentWinrate">Total WR Anda (%):</label>
+                    <input type="number" id="currentWinrate" placeholder="Cth: 76.4" step="0.1" min="0" max="100">
+                </div>
 
-        <p id="result">Winrate Anda Saat Ini: <span>0.00%</span></p>
+                <div class="input-group">
+                    <label for="targetWinrate">WR yang Anda Inginkan (%):</label>
+                    <input type="number" id="targetWinrate" placeholder="Cth: 80" step="0.1" min="0" max="100">
+                </div>
+            </div>
 
-        <hr>
-
-        <h2>🎯 Target Winrate Impian Anda</h2>
-
-        <div class="input-group">
-            <label for="targetWinrate">Winrate yang Anda Inginkan (%):</label>
-            <input type="number" id="targetWinrate" placeholder="Contoh: 60" min="0" max="100">
+            <div class="output-section">
+                <h2 class="section-title">Hasil Perhitungan</h2>
+                <p id="calculatedCurrentWinrate" class="result-display">Winrate Saat Ini: <span>0.00%</span></p>
+                <p id="matchesNeeded" class="result-display">Butuh <span>0</span> kemenangan beruntun.</p>
+            </div>
         </div>
 
         <button onclick="calculateWinrate()">🔥 Hitung Perjalanan Anda</button>
-
-        <p id="targetResult">Butuh <span>0</span> kemenangan beruntun untuk mencapai target.</p>
     </div>
 
     <script>
         function calculateWinrate() {
             const totalMatchesInput = document.getElementById('totalMatches');
-            const totalWinsInput = document.getElementById('totalWins');
+            const currentWinrateInput = document.getElementById('currentWinrate'); // Mengambil dari input winrate
             const targetWinrateInput = document.getElementById('targetWinrate');
 
-            const resultElement = document.getElementById('result');
-            const resultSpan = resultElement.querySelector('span');
-            const targetResultElement = document.getElementById('targetResult');
-            const targetResultSpan = targetResultElement.querySelector('span');
+            const calculatedCurrentWinrateElement = document.getElementById('calculatedCurrentWinrate');
+            const calculatedCurrentWinrateSpan = calculatedCurrentWinrateElement.querySelector('span');
+            const matchesNeededElement = document.getElementById('matchesNeeded');
+            const matchesNeededSpan = matchesNeededElement.querySelector('span');
 
             // Reset error states
-            resultElement.classList.remove('error');
-            targetResultElement.classList.remove('error');
+            calculatedCurrentWinrateElement.classList.remove('error');
+            matchesNeededElement.classList.remove('error');
 
             const totalMatches = parseFloat(totalMatchesInput.value);
-            const totalWins = parseFloat(totalWinsInput.value);
+            const currentWinrate = parseFloat(currentWinrateInput.value); // Langsung pakai winrate dari input
             const targetWinrate = parseFloat(targetWinrateInput.value);
 
-            // --- Bagian Perhitungan Winrate Saat Ini ---
-            if (isNaN(totalMatches) || isNaN(totalWins) || totalMatches < 0 || totalWins < 0) {
-                resultSpan.textContent = "Input pertandingan/kemenangan tidak valid!";
-                resultElement.classList.add('error');
-                targetResultSpan.textContent = "Mohon perbaiki input dasar untuk hitungan target.";
-                targetResultElement.classList.add('error');
+            // --- Validasi Input ---
+            if (isNaN(totalMatches) || totalMatches < 0) {
+                calculatedCurrentWinrateSpan.textContent = "Total match tidak valid!";
+                calculatedCurrentWinrateElement.classList.add('error');
+                matchesNeededSpan.textContent = "Mohon perbaiki input.";
+                matchesNeededElement.classList.add('error');
                 return;
             }
 
-            if (totalWins > totalMatches) {
-                resultSpan.textContent = "Kemenangan tidak boleh lebih dari total pertandingan!";
-                resultElement.classList.add('error');
-                targetResultSpan.textContent = "Mohon perbaiki input dasar untuk hitungan target.";
-                targetResultElement.classList.add('error');
+            if (isNaN(currentWinrate) || currentWinrate < 0 || currentWinrate > 100) {
+                calculatedCurrentWinrateSpan.textContent = "Winrate Anda tidak valid (0-100)!";
+                calculatedCurrentWinrateElement.classList.add('error');
+                matchesNeededSpan.textContent = "Mohon perbaiki input.";
+                matchesNeededElement.classList.add('error');
                 return;
             }
 
-            let currentWinrate = 0;
-            if (totalMatches === 0) {
-                resultSpan.textContent = "0.00%";
-            } else {
-                currentWinrate = (totalWins / totalMatches) * 100;
-                resultSpan.textContent = `${currentWinrate.toFixed(2)}%`;
-            }
-
-            // --- Bagian Perhitungan Target Winrate ---
             if (isNaN(targetWinrate) || targetWinrate < 0 || targetWinrate > 100) {
-                targetResultSpan.textContent = "Target winrate tidak valid (0-100)!";
-                targetResultElement.classList.add('error');
+                matchesNeededSpan.textContent = "Target winrate tidak valid (0-100)!";
+                matchesNeededElement.classList.add('error');
                 return;
             }
 
-            if (totalMatches === 0 && targetWinrate > 0) {
-                // If no matches played yet and targeting > 0% winrate, you need wins equal to matches
-                targetResultSpan.textContent = `Mainkan dan menangkan ${targetWinrate} pertandingan beruntun untuk ${targetWinrate}% winrate.`;
-                targetResultElement.classList.remove('error');
+            // --- Perhitungan Winrate Saat Ini (dari input) ---
+            calculatedCurrentWinrateSpan.textContent = `${currentWinrate.toFixed(2)}%`; // Langsung menampilkan input winrate
+
+            // --- Logika Perhitungan Jumlah Kemenangan Beruntun (sesuai referensi) ---
+            const totalWins = totalMatches * (currentWinrate / 100); // Hitung total kemenangan dari match dan WR saat ini
+            const targetDecimal = targetWinrate / 100;
+
+            if (currentWinrate >= targetWinrate) {
+                matchesNeededSpan.textContent = `Anda sudah mencapai (${currentWinrate.toFixed(2)}%) atau melampaui target (${targetWinrate.toFixed(2)}%)!`;
+                matchesNeededElement.classList.remove('error'); 
                 return;
+            }
+
+            let winsNeeded;
+            if (targetDecimal === 1) { // Jika targetnya 100%
+                if (currentWinrate === 100) {
+                    winsNeeded = 0; // Sudah 100%
+                } else {
+                    matchesNeededSpan.textContent = `Butuh kemenangan tak terbatas untuk mencapai 100% winrate dari posisi ini!`;
+                    matchesNeededElement.classList.remove('error');
+                    return;
+                }
+            } else if (1 - targetDecimal === 0) { // Safety check for division by zero (should be caught by targetDecimal === 1)
+                 matchesNeededSpan.textContent = `Tidak dapat menghitung untuk target winrate ini.`;
+                 matchesNeededElement.classList.add('error');
+                 return;
+            } else {
+                // Rumus dari referensi: x = (totalMatch * wrTarget - totalWin) / (1 - wrTarget)
+                winsNeeded = (totalMatches * targetDecimal - totalWins) / (1 - targetDecimal);
             }
             
-            if (currentWinrate >= targetWinrate) {
-                targetResultSpan.textContent = `Anda sudah mencapai (${currentWinrate.toFixed(2)}%) atau melampaui target (${targetWinrate.toFixed(2)}%)!`;
-                targetResultElement.classList.remove('error'); 
-                return;
-            }
-
-            // Rumus: (currentWins + X) / (currentMatches + X) = targetWinrate / 100
-            // X = ((targetWinrate / 100 * currentMatches) - currentWins) / (1 - targetWinrate / 100)
-
-            const targetDecimal = targetWinrate / 100;
-            let winsNeeded = ((targetDecimal * totalMatches) - totalWins) / (1 - targetDecimal);
-
-            // Handle edge case where winrate approaches 100% and denominator becomes 0
-            if (1 - targetDecimal === 0 && targetWinrate === 100) {
-                 if (totalWins === totalMatches) { // Already 100% winrate
-                    winsNeeded = 0;
-                 } else { // Need infinite wins to reach 100% if not already there
-                    targetResultSpan.textContent = `Butuh kemenangan tak terbatas untuk mencapai 100% winrate dari posisi ini!`;
-                    targetResultElement.classList.remove('error');
-                    return;
-                 }
-            } else if (1 - targetDecimal <= 0) { // Should not happen with targetWinrate < 100, but for safety
-                 targetResultSpan.textContent = `Tidak dapat menghitung untuk target winrate ini.`;
-                 targetResultElement.classList.add('error');
-                 return;
-            }
-
-
-            if (winsNeeded < 0) { 
-                targetResultSpan.textContent = `Anda sudah mencapai atau melampaui target!`; // Should be caught by earlier check, but good to have.
-                targetResultElement.classList.remove('error');
+            if (winsNeeded < 0) { // Ini seharusnya tidak terjadi jika currentWinrate < targetWinrate
+                matchesNeededSpan.textContent = `Anda sudah mencapai atau melampaui target!`; 
+                matchesNeededElement.classList.remove('error');
             } else {
-                targetResultSpan.textContent = `Butuh sekitar ${Math.ceil(winsNeeded)} kemenangan beruntun untuk mencapai target.`;
+                matchesNeededSpan.textContent = `Butuh sekitar ${Math.ceil(winsNeeded)} kemenangan beruntun.`;
             }
         }
     </script>
