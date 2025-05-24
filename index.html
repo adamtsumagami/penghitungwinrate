@@ -3,33 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penghitung Winrate MLBB</title>
+    <title>Penghitung Winrate MLBB & Target - Catppuccin Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        /* Catppuccin Mocha Palette */
+        :root {
+            --ctp-rosewater: #f5e0dc;
+            --ctp-flamingo: #f2cdcd;
+            --ctp-pink: #f5c2e7;
+            --ctp-mauve: #cba6f7;
+            --ctp-red: #f38ba8;
+            --ctp-maroon: #eba0ac;
+            --ctp-peach: #fab387;
+            --ctp-yellow: #f9e2af;
+            --ctp-green: #a6e3a1;
+            --ctp-teal: #94e2d5;
+            --ctp-sky: #89dceb;
+            --ctp-sapphire: #74c7ec;
+            --ctp-blue: #89b4fa;
+            --ctp-lavender: #b4befe;
+            --ctp-text: #cdd6f4;
+            --ctp-subtext1: #bac2de;
+            --ctp-subtext0: #a6adbb;
+            --ctp-overlay2: #9399b2;
+            --ctp-overlay1: #7f849c;
+            --ctp-overlay0: #6c7086;
+            --ctp-surface2: #585b70;
+            --ctp-surface1: #45475a;
+            --ctp-surface0: #313244;
+            --ctp-base: #1e1e2e;
+            --ctp-mantle: #181825;
+            --ctp-crust: #11111b;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Fira Code', monospace;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #2c3e50; /* Dark blue background */
-            color: #ecf0f1; /* Light text color */
+            background: linear-gradient(135deg, var(--ctp-crust), var(--ctp-base));
+            color: var(--ctp-text);
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        body::before {
+            top: 10%;
+            left: 10%;
+            transform: rotate(45deg);
+            background: var(--ctp-red);
+        }
+
+        body::after {
+            bottom: 10%;
+            right: 10%;
+            transform: rotate(-30deg);
+            background: var(--ctp-blue);
         }
 
         .container {
-            background-color: #34495e; /* Slightly lighter blue for container */
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background-color: var(--ctp-surface0);
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
             text-align: center;
             width: 90%;
-            max-width: 400px;
+            max-width: 500px; /* Lebarkan sedikit untuk konten baru */
+            border: 1px solid var(--ctp-surface1);
+            position: relative;
+            z-index: 1;
+
+            background-color: rgba(49, 50, 68, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
         }
 
         h1 {
-            color: #e74c3c; /* Red color for title */
+            color: var(--ctp-lavender);
             margin-bottom: 25px;
-            font-size: 2em;
+            font-size: 2.2em;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .input-group {
@@ -40,102 +106,193 @@
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
-            color: #bdc3c7; /* Grayish text for labels */
+            font-weight: 600;
+            color: var(--ctp-subtext1);
+            font-size: 0.95em;
         }
 
         .input-group input[type="number"] {
-            width: calc(100% - 20px);
+            width: calc(100% - 24px);
             padding: 12px;
-            border: none;
-            border-radius: 5px;
-            background-color: #ecf0f1; /* Light background for input */
-            color: #2c3e50; /* Dark text for input */
+            border: 1px solid var(--ctp-surface1);
+            border-radius: 8px;
+            background-color: var(--ctp-mantle);
+            color: var(--ctp-text);
             font-size: 1.1em;
             outline: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-group input[type="number"]::placeholder {
+            color: var(--ctp-overlay0);
         }
 
         .input-group input[type="number"]:focus {
-            box-shadow: 0 0 0 2px #e74c3c; /* Red focus highlight */
+            border-color: var(--ctp-blue);
+            box-shadow: 0 0 0 2px var(--ctp-blue), inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         button {
-            background-color: #27ae60; /* Green button */
-            color: white;
+            background-color: var(--ctp-green);
+            color: var(--ctp-crust);
             padding: 15px 25px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 1.2em;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
         button:hover {
-            background-color: #2ecc71; /* Lighter green on hover */
+            background-color: var(--ctp-teal);
+            transform: translateY(-2px);
         }
 
-        #result {
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #result, #targetResult {
             margin-top: 30px;
-            font-size: 1.5em;
+            font-size: 1.6em;
             font-weight: bold;
-            color: #f1c40f; /* Yellow color for result */
+            color: var(--ctp-yellow);
+            padding: 10px;
+            background-color: var(--ctp-surface1);
+            border-radius: 10px;
+            border: 1px dashed var(--ctp-surface2);
         }
 
-        #result span {
-            color: #3498db; /* Blue color for winrate percentage */
+        #result span, #targetResult span {
+            color: var(--ctp-pink);
+            font-size: 1.2em;
+        }
+
+        /* Error message styling */
+        .error {
+            color: var(--ctp-red) !important;
+        }
+        .error span {
+            color: var(--ctp-red) !important;
+        }
+
+        /* Separator for clarity */
+        hr {
+            border: none;
+            border-top: 1px dashed var(--ctp-surface2);
+            margin: 40px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Penghitung Winrate MLBB</h1>
+        <h1>⚔️ Hitung Winrate MLBB 🛡️</h1>
 
         <div class="input-group">
             <label for="totalMatches">Total Pertandingan:</label>
-            <input type="number" id="totalMatches" placeholder="Masukkan total pertandingan" min="0">
+            <input type="number" id="totalMatches" placeholder="Contoh: 1500" min="0">
         </div>
 
         <div class="input-group">
             <label for="totalWins">Total Kemenangan:</label>
-            <input type="number" id="totalWins" placeholder="Masukkan total kemenangan" min="0">
+            <input type="number" id="totalWins" placeholder="Contoh: 800" min="0">
         </div>
 
-        <button onclick="calculateWinrate()">Hitung Winrate</button>
+        <p id="result">Winrate Anda Saat Ini: <span>0.00%</span></p>
 
-        <p id="result">Winrate Anda: <span>0.00%</span></p>
+        <hr>
+
+        <h2>🎯 Target Winrate</h2>
+
+        <div class="input-group">
+            <label for="targetWinrate">Target Winrate (%):</label>
+            <input type="number" id="targetWinrate" placeholder="Contoh: 60" min="0" max="100">
+        </div>
+
+        <button onclick="calculateWinrate()">🔥 Hitung Winrate & Target</button>
+
+        <p id="targetResult">Butuh <span>0</span> kemenangan beruntun untuk mencapai target.</p>
     </div>
 
     <script>
         function calculateWinrate() {
             const totalMatchesInput = document.getElementById('totalMatches');
             const totalWinsInput = document.getElementById('totalWins');
-            const resultDisplay = document.getElementById('result').querySelector('span');
+            const targetWinrateInput = document.getElementById('targetWinrate');
+
+            const resultElement = document.getElementById('result');
+            const resultSpan = resultElement.querySelector('span');
+            const targetResultElement = document.getElementById('targetResult');
+            const targetResultSpan = targetResultElement.querySelector('span');
+
+            // Reset error states
+            resultElement.classList.remove('error');
+            targetResultElement.classList.remove('error');
 
             const totalMatches = parseFloat(totalMatchesInput.value);
             const totalWins = parseFloat(totalWinsInput.value);
+            const targetWinrate = parseFloat(targetWinrateInput.value);
 
+            // --- Bagian Perhitungan Winrate Saat Ini ---
             if (isNaN(totalMatches) || isNaN(totalWins) || totalMatches < 0 || totalWins < 0) {
-                resultDisplay.textContent = "Input tidak valid!";
-                resultDisplay.style.color = "#e74c3c"; // Red for error
+                resultSpan.textContent = "Input tidak valid!";
+                resultElement.classList.add('error');
+                targetResultSpan.textContent = "Mohon masukkan data valid untuk hitungan target.";
+                targetResultElement.classList.add('error');
                 return;
             }
 
             if (totalWins > totalMatches) {
-                resultDisplay.textContent = "Kemenangan tidak boleh lebih dari total pertandingan!";
-                resultDisplay.style.color = "#e74c3c"; // Red for error
+                resultSpan.textContent = "Kemenangan tidak boleh lebih dari total pertandingan!";
+                resultElement.classList.add('error');
+                targetResultSpan.textContent = "Mohon masukkan data valid untuk hitungan target.";
+                targetResultElement.classList.add('error');
                 return;
             }
 
+            let currentWinrate = 0;
             if (totalMatches === 0) {
-                resultDisplay.textContent = "0.00%";
-                resultDisplay.style.color = "#3498db"; // Blue for normal result
+                resultSpan.textContent = "0.00%";
+            } else {
+                currentWinrate = (totalWins / totalMatches) * 100;
+                resultSpan.textContent = `${currentWinrate.toFixed(2)}%`;
+            }
+
+            // --- Bagian Perhitungan Target Winrate ---
+            if (isNaN(targetWinrate) || targetWinrate < 0 || targetWinrate > 100) {
+                targetResultSpan.textContent = "Target winrate tidak valid (0-100)!";
+                targetResultElement.classList.add('error');
                 return;
             }
 
-            const winrate = (totalWins / totalMatches) * 100;
-            resultDisplay.textContent = `${winrate.toFixed(2)}%`;
-            resultDisplay.style.color = "#3498db"; // Blue for normal result
+            if (currentWinrate >= targetWinrate) {
+                targetResultSpan.textContent = `Anda sudah mencapai (${currentWinrate.toFixed(2)}%) atau melampaui target (${targetWinrate.toFixed(2)}%)!`;
+                targetResultElement.classList.remove('error'); // Ensure no error state if already met
+                return;
+            }
+
+            // Rumus: (currentWins + X) / (currentMatches + X) = targetWinrate / 100
+            // currentWins + X = (targetWinrate / 100) * (currentMatches + X)
+            // currentWins + X = (targetWinrate / 100 * currentMatches) + (targetWinrate / 100 * X)
+            // X - (targetWinrate / 100 * X) = (targetWinrate / 100 * currentMatches) - currentWins
+            // X * (1 - targetWinrate / 100) = (targetWinrate / 100 * currentMatches) - currentWins
+            // X = ((targetWinrate / 100 * currentMatches) - currentWins) / (1 - targetWinrate / 100)
+
+            const targetDecimal = targetWinrate / 100;
+            const winsNeeded = ((targetDecimal * totalMatches) - totalWins) / (1 - targetDecimal);
+
+            if (winsNeeded < 0) { // Should technically be caught by currentWinrate >= targetWinrate, but for safety
+                targetResultSpan.textContent = `Anda sudah mencapai atau melampaui target!`;
+                targetResultElement.classList.remove('error');
+            } else {
+                targetResultSpan.textContent = `Butuh sekitar ${Math.ceil(winsNeeded)} kemenangan beruntun untuk mencapai target.`;
+            }
         }
     </script>
 </body>
