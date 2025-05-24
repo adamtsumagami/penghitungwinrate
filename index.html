@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penghitung Winrate & Target MLBB</title>
+    <title>Kalkulator Winrate MLBB</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
         /* Catppuccin Mocha Palette */
@@ -36,9 +36,8 @@
             --ctp-crust: #11111b;
         }
 
-        /* Perbaikan untuk full screen */
         html, body {
-            height: 100%; /* Memastikan html dan body mengisi tinggi viewport */
+            height: 100%;
             margin: 0;
             padding: 0;
         }
@@ -48,10 +47,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* min-height: 100vh; diganti dengan height: 100% dari html, body */
             background: linear-gradient(135deg, var(--ctp-crust), var(--ctp-base));
             color: var(--ctp-text);
-            overflow: hidden; /* Pastikan tidak ada scrollbar tambahan */
+            overflow: hidden; /* Pastikan tidak ada scrollbar dari body */
             position: relative;
         }
 
@@ -82,7 +80,7 @@
 
         .container {
             background-color: var(--ctp-surface0);
-            padding: 35px;
+            padding: 30px; /* Sedikit lebih kecil dari sebelumnya */
             border-radius: 15px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
             text-align: center;
@@ -97,42 +95,56 @@
             -webkit-backdrop-filter: blur(15px);
             display: flex;
             flex-direction: column;
-            gap: 25px;
-            /* Pastikan container tidak melebihi tinggi viewport */
-            max-height: 95vh; /* Sedikit kurang dari 100vh agar ada ruang */
-            overflow-y: auto; /* Tambahkan scroll jika konten terlalu panjang */
+            gap: 20px; /* Sedikit lebih kecil dari sebelumnya */
+            
+            /* Penyesuaian untuk menghindari scroll di desktop */
+            max-height: 90vh; /* Agar tidak terlalu mepet ke atas/bawah */
+            overflow-y: auto; /* Fallback: scroll jika masih tidak muat */
         }
 
         h1 {
             color: var(--ctp-lavender);
             margin-bottom: 0;
-            font-size: 2.2em;
+            font-size: 2em; /* Sedikit lebih kecil */
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .content-wrapper {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
+            gap: 25px; /* Sedikit lebih kecil dari sebelumnya */
             justify-content: center;
             width: 100%;
         }
 
-        .input-section, .output-section {
+        .input-section {
             flex: 1;
             min-width: 250px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px; /* Lebih kecil antar input group */
             background-color: var(--ctp-mantle);
-            padding: 20px;
+            padding: 18px; /* Sedikit lebih kecil */
+            border-radius: 10px;
+            border: 1px solid var(--ctp-surface1);
+        }
+        
+        .output-section { /* Output section sekarang sama dengan input section */
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Lebih kecil antar hasil */
+            background-color: var(--ctp-mantle);
+            padding: 18px; /* Sedikit lebih kecil */
             border-radius: 10px;
             border: 1px solid var(--ctp-surface1);
         }
 
+
         .section-title {
             color: var(--ctp-sky);
-            font-size: 1.5em;
+            font-size: 1.4em; /* Sedikit lebih kecil */
             margin-top: 0;
             margin-bottom: 15px;
             text-align: center;
@@ -145,20 +157,20 @@
 
         .input-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px; /* Sedikit lebih kecil */
             font-weight: 600;
             color: var(--ctp-subtext1);
-            font-size: 0.95em;
+            font-size: 0.9em; /* Sedikit lebih kecil */
         }
 
         .input-group input[type="number"] {
-            width: calc(100% - 24px);
-            padding: 12px;
+            width: calc(100% - 20px); /* Sesuaikan dengan padding baru */
+            padding: 10px; /* Sedikit lebih kecil */
             border: 1px solid var(--ctp-surface1);
             border-radius: 8px;
             background-color: var(--ctp-crust);
             color: var(--ctp-text);
-            font-size: 1.1em;
+            font-size: 1em; /* Sedikit lebih kecil */
             outline: none;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -176,10 +188,10 @@
         button {
             background-color: var(--ctp-green);
             color: var(--ctp-crust);
-            padding: 15px 25px;
+            padding: 14px 22px; /* Sedikit lebih kecil */
             border: none;
             border-radius: 8px;
-            font-size: 1.2em;
+            font-size: 1.1em; /* Sedikit lebih kecil */
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
@@ -199,10 +211,10 @@
         }
 
         .result-display {
-            font-size: 1.3em;
+            font-size: 1.2em; /* Sedikit lebih kecil */
             font-weight: bold;
             color: var(--ctp-yellow);
-            padding: 10px;
+            padding: 8px; /* Sedikit lebih kecil */
             background-color: var(--ctp-crust);
             border-radius: 8px;
             border: 1px dashed var(--ctp-surface2);
@@ -211,7 +223,7 @@
 
         .result-display span {
             color: var(--ctp-pink);
-            font-size: 1.1em;
+            font-size: 1em; /* Sedikit lebih kecil */
         }
 
         /* Error message styling */
@@ -223,20 +235,90 @@
             color: var(--ctp-red) !important;
         }
 
-        /* Responsive adjustments */
+        /* --- Media Queries for Responsiveness (HP/Small Screens) --- */
         @media (max-width: 768px) {
-            .content-wrapper {
-                flex-direction: column;
+            .container {
+                padding: 18px; /* Kurangi padding container lebih lanjut */
+                gap: 12px; /* Kurangi gap antar bagian lebih lanjut */
+                max-height: 98vh; /* Beri sedikit lebih banyak ruang di HP */
             }
+
+            h1 {
+                font-size: 1.7em; /* Kecilkan ukuran font judul */
+            }
+
+            .content-wrapper {
+                flex-direction: column; /* Ubah ke satu kolom */
+                gap: 15px; /* Kurangi gap antar input/output section */
+            }
+            
             .input-section, .output-section {
-                min-width: unset;
+                min-width: unset; /* Hapus min-width */
+                padding: 12px; /* Kurangi padding di dalam section */
+            }
+
+            .section-title {
+                font-size: 1.2em; /* Kecilkan ukuran font judul section */
+            }
+
+            .input-group label {
+                font-size: 0.8em; /* Kecilkan ukuran font label input */
+            }
+
+            .input-group input[type="number"] {
+                padding: 8px; /* Kurangi padding input */
+                font-size: 0.9em; /* Sesuaikan ukuran font input */
+            }
+
+            button {
+                padding: 10px 15px; /* Kurangi padding tombol */
+                font-size: 1em; /* Sesuaikan ukuran font tombol */
+            }
+
+            .result-display {
+                font-size: 1em; /* Kecilkan ukuran font hasil */
+                padding: 6px; /* Kurangi padding hasil */
+            }
+
+            .result-display span {
+                font-size: 0.9em; /* Sesuaikan ukuran font angka hasil */
+            }
+        }
+
+        /* Further adjustments for very small screens (e.g., iPhone SE) */
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+                gap: 8px;
+            }
+            h1 {
+                font-size: 1.4em;
+            }
+            .section-title {
+                font-size: 1.1em;
+                margin-bottom: 10px;
+            }
+            .input-group label {
+                font-size: 0.75em;
+            }
+            .input-group input[type="number"] {
+                padding: 6px;
+                font-size: 0.85em;
+            }
+            button {
+                font-size: 0.95em;
+                padding: 8px 12px;
+            }
+            .result-display {
+                font-size: 0.9em;
+                padding: 5px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>⚔️ Penghitung Winrate MLBB 🛡️</h1>
+        <h1>⚔️ Kalkulator Winrate MLBB 🛡️</h1>
 
         <div class="content-wrapper">
             <div class="input-section">
@@ -259,12 +341,11 @@
 
             <div class="output-section">
                 <h2 class="section-title">Hasil Perhitungan</h2>
+                <button onclick="calculateWinrate()">🔥 Hitung Perjalanan Anda</button>
                 <p id="calculatedCurrentWinrate" class="result-display">Winrate Saat Ini: <span>0.00%</span></p>
                 <p id="matchesNeeded" class="result-display">Butuh <span>0</span> Win.</p>
             </div>
         </div>
-
-        <button onclick="calculateWinrate()">🔥 Hitung Perjalanan Anda</button>
     </div>
 
     <script>
@@ -340,7 +421,7 @@
                 winsNeeded = (totalMatches * targetDecimal - totalWins) / (1 - targetDecimal);
             }
             
-            if (winsNeeded < 0) { // Ini seharusnya tidak terjadi jika currentWinrate < targetWinrate
+            if (winsNeeded < 0) {
                 matchesNeededSpan.textContent = `Anda sudah mencapai atau melampaui target!`; 
                 matchesNeededElement.classList.remove('error');
             } else {
