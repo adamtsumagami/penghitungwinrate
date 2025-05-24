@@ -1,7 +1,6 @@
 # ⚔️ MLBB Winrate & Target Calculator 🎯
 
-![MLBB Winrate Calculator Screenshot](canvas.png)
-*(Ganti placeholder ini dengan screenshot asli aplikasi Anda setelah deploy)*
+![MLBB Winrate Calculator Screenshot](webss.png)
 
 Sebuah aplikasi web sederhana untuk menghitung winrate Mobile Legends: Bang Bang Anda saat ini dan menentukan berapa banyak kemenangan beruntun yang Anda butuhkan untuk mencapai target winrate tertentu! Dibuat dengan HTML, CSS, dan JavaScript murni, menampilkan desain modern dengan efek glassmorphism dan palet warna Catppuccin yang menawan.
 
@@ -20,11 +19,11 @@ Sebuah aplikasi web sederhana untuk menghitung winrate Mobile Legends: Bang Bang
 ## 🚀 Cara Menggunakan
 
 1.  **Akses Aplikasi**:
-    * **Online (Vercel/GitHub Pages)**: Kunjungi [link deploy Anda di Vercel/GitHub Pages di sini](URL_DEPLOY_ANDA_DI_SINI) (Misalnya: `https://mlbb-winrate-calculator.vercel.app/` atau `https://username.github.io/nama-repo-anda/`).
+    * **Online (Vercel/GitHub Pages)**: Kunjungi [Penghitung WR](https://penghitung-wr.vercel.app/) (Misalnya: `https://mlbb-winrate-calculator.vercel.app/` atau `https://username.github.io/nama-repo-anda/`).
     * **Lokal**:
-        1.  Clone repositori ini: `git clone https://github.com/USERNAME/NAMA_REPOS_ANDA.git`
-        2.  Masuk ke direktori proyek: `cd NAMA_REPOS_ANDA`
-        3.  Buka file `index.html` (atau `winrate_mlbb.html` jika Anda tidak mengubah namanya) di browser web Anda.
+        1.  Clone repositori ini: `git clone https://github.com/adamtsumagami/penghitungwinrate.git`
+        2.  Masuk ke direktori proyek: `cd penghitungwinrate`
+        3.  Buka file `index.html`
 
 2.  **Masukkan Data Anda**:
     * Pada kolom "Total Pertandingan", masukkan jumlah total pertandingan yang sudah Anda mainkan.
