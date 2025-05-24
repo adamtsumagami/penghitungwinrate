@@ -366,8 +366,8 @@
 
         <div class="section-box">
             <h2 class="section-title">Hasil Perhitungan</h2>
-            <p id="matchesNeeded" class="result-display">Butuh <span>0</span> Win.</p>
-        </div>
+            <p id="matchesNeeded" class="result-display"><span>0</span></p> 
+            </div>
     </div>
 
     <p class="watermark">Made with ♥ by <a href="https://www.instagram.com/adamtsumagami/" target="_blank" rel="noopener noreferrer">Adam Tsumagami</a></p>
@@ -379,8 +379,8 @@
             const targetWinrateInput = document.getElementById('targetWinrate');
             
             const matchesNeededElement = document.getElementById('matchesNeeded');
-            const matchesNeededSpan = matchesNeededElement.querySelector('span');
-
+            const matchesNeededSpan = matchesNeededElement.querySelector('span'); // Ini akan berisi nilai angka saja
+            
             // Reset error state
             matchesNeededElement.classList.remove('error');
 
@@ -390,19 +390,19 @@
 
             // --- Validasi Input ---
             if (isNaN(totalMatches) || totalMatches < 0) {
-                matchesNeededSpan.textContent = "Total match tidak valid!";
+                matchesNeededElement.textContent = "Total match tidak valid!"; // Mengisi langsung textContent parent p
                 matchesNeededElement.classList.add('error');
                 return;
             }
 
             if (isNaN(currentWinrate) || currentWinrate < 0 || currentWinrate > 100) {
-                matchesNeededSpan.textContent = "Winrate Anda tidak valid (0-100)!";
+                matchesNeededElement.textContent = "Winrate Anda tidak valid (0-100)!";
                 matchesNeededElement.classList.add('error');
                 return;
             }
 
             if (isNaN(targetWinrate) || targetWinrate < 0 || targetWinrate > 100) {
-                matchesNeededSpan.textContent = "Target winrate tidak valid (0-100)!";
+                matchesNeededElement.textContent = "Target winrate tidak valid (0-100)!";
                 matchesNeededElement.classList.add('error');
                 return;
             }
@@ -412,7 +412,7 @@
             const targetDecimal = targetWinrate / 100;
 
             if (currentWinrate >= targetWinrate) {
-                matchesNeededSpan.textContent = `Anda sudah mencapai (${currentWinrate.toFixed(2)}%) atau melampaui target (${targetWinrate.toFixed(2)}%)!`;
+                matchesNeededElement.innerHTML = `Anda sudah mencapai (${currentWinrate.toFixed(2)}%) atau melampaui target (${targetWinrate.toFixed(2)}%)!`;
                 matchesNeededElement.classList.remove('error'); 
                 return;
             }
@@ -422,12 +422,12 @@
                 if (currentWinrate === 100) {
                     winsNeeded = 0; // Sudah 100%
                 } else {
-                    matchesNeededSpan.textContent = `Butuh tak terbatas Win untuk mencapai 100% Winrate dari posisi ini!`; /* Diperbaiki: WR ke Winrate */
+                    matchesNeededElement.innerHTML = `Butuh tak terbatas Win untuk mencapai 100% Winrate dari posisi ini!`;
                     matchesNeededElement.classList.remove('error');
                     return;
                 }
             } else if (1 - targetDecimal <= 0) { // Safety check for division by zero or negative denominator
-                 matchesNeededSpan.textContent = `Tidak dapat menghitung untuk target Winrate ini.`; /* Diperbaiki: WR ke Winrate */
+                 matchesNeededElement.textContent = `Tidak dapat menghitung untuk target Winrate ini.`;
                  matchesNeededElement.classList.add('error');
                  return;
             } else {
@@ -435,11 +435,11 @@
             }
             
             if (winsNeeded < 0) {
-                matchesNeededSpan.textContent = `Anda sudah mencapai atau melampaui target!`; 
+                matchesNeededElement.innerHTML = `Anda sudah mencapai atau melampaui target!`; 
                 matchesNeededElement.classList.remove('error');
             } else {
-                // Diperbaiki: Tidak ada lagi pengulangan "Butuh"
-                matchesNeededSpan.textContent = `Butuh sekitar ${Math.ceil(winsNeeded)} Win.`;
+                // Diperbaiki: Seluruh teks "Butuh X Win." sekarang dihasilkan oleh JavaScript
+                matchesNeededElement.innerHTML = `Butuh sekitar <span>${Math.ceil(winsNeeded)}</span> Win.`;
             }
         }
     </script>
