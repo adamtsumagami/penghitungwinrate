@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penghitung Winrate & Target MLBB (Johsteven.github.io Logic)</title>
+    <title>Penghitung Winrate & Target MLBB</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
         /* Catppuccin Mocha Palette */
@@ -36,16 +36,22 @@
             --ctp-crust: #11111b;
         }
 
+        /* Perbaikan untuk full screen */
+        html, body {
+            height: 100%; /* Memastikan html dan body mengisi tinggi viewport */
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Fira Code', monospace;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            /* min-height: 100vh; diganti dengan height: 100% dari html, body */
             background: linear-gradient(135deg, var(--ctp-crust), var(--ctp-base));
             color: var(--ctp-text);
-            overflow: hidden;
+            overflow: hidden; /* Pastikan tidak ada scrollbar tambahan */
             position: relative;
         }
 
@@ -92,6 +98,9 @@
             display: flex;
             flex-direction: column;
             gap: 25px;
+            /* Pastikan container tidak melebihi tinggi viewport */
+            max-height: 95vh; /* Sedikit kurang dari 100vh agar ada ruang */
+            overflow-y: auto; /* Tambahkan scroll jika konten terlalu panjang */
         }
 
         h1 {
@@ -251,7 +260,7 @@
             <div class="output-section">
                 <h2 class="section-title">Hasil Perhitungan</h2>
                 <p id="calculatedCurrentWinrate" class="result-display">Winrate Saat Ini: <span>0.00%</span></p>
-                <p id="matchesNeeded" class="result-display">Butuh <span>0</span> kemenangan beruntun.</p>
+                <p id="matchesNeeded" class="result-display">Butuh <span>0</span> Win.</p>
             </div>
         </div>
 
@@ -318,12 +327,12 @@
                 if (currentWinrate === 100) {
                     winsNeeded = 0; // Sudah 100%
                 } else {
-                    matchesNeededSpan.textContent = `Butuh kemenangan tak terbatas untuk mencapai 100% winrate dari posisi ini!`;
+                    matchesNeededSpan.textContent = `Butuh tak terbatas Win untuk mencapai 100% WR dari posisi ini!`;
                     matchesNeededElement.classList.remove('error');
                     return;
                 }
             } else if (1 - targetDecimal === 0) { // Safety check for division by zero (should be caught by targetDecimal === 1)
-                 matchesNeededSpan.textContent = `Tidak dapat menghitung untuk target winrate ini.`;
+                 matchesNeededSpan.textContent = `Tidak dapat menghitung untuk target WR ini.`;
                  matchesNeededElement.classList.add('error');
                  return;
             } else {
@@ -331,11 +340,11 @@
                 winsNeeded = (totalMatches * targetDecimal - totalWins) / (1 - targetDecimal);
             }
             
-            if (winsNeeded < 0) {
+            if (winsNeeded < 0) { // Ini seharusnya tidak terjadi jika currentWinrate < targetWinrate
                 matchesNeededSpan.textContent = `Anda sudah mencapai atau melampaui target!`; 
                 matchesNeededElement.classList.remove('error');
             } else {
-                matchesNeededSpan.textContent = `Butuh sekitar ${Math.ceil(winsNeeded)} kemenangan beruntun.`;
+                matchesNeededSpan.textContent = `Butuh sekitar ${Math.ceil(winsNeeded)} Win.`;
             }
         }
     </script>
