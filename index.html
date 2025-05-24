@@ -261,7 +261,7 @@
     <script>
         function calculateWinrate() {
             const totalMatchesInput = document.getElementById('totalMatches');
-            const currentWinrateInput = document.getElementById('currentWinrate'); // Mengambil dari input winrate
+            const currentWinrateInput = document.getElementById('currentWinrate');
             const targetWinrateInput = document.getElementById('targetWinrate');
 
             const calculatedCurrentWinrateElement = document.getElementById('calculatedCurrentWinrate');
@@ -274,7 +274,7 @@
             matchesNeededElement.classList.remove('error');
 
             const totalMatches = parseFloat(totalMatchesInput.value);
-            const currentWinrate = parseFloat(currentWinrateInput.value); // Langsung pakai winrate dari input
+            const currentWinrate = parseFloat(currentWinrateInput.value);
             const targetWinrate = parseFloat(targetWinrateInput.value);
 
             // --- Validasi Input ---
@@ -301,10 +301,10 @@
             }
 
             // --- Perhitungan Winrate Saat Ini (dari input) ---
-            calculatedCurrentWinrateSpan.textContent = `${currentWinrate.toFixed(2)}%`; // Langsung menampilkan input winrate
+            calculatedCurrentWinrateSpan.textContent = `${currentWinrate.toFixed(2)}%`;
 
             // --- Logika Perhitungan Jumlah Kemenangan Beruntun (sesuai referensi) ---
-            const totalWins = totalMatches * (currentWinrate / 100); // Hitung total kemenangan dari match dan WR saat ini
+            const totalWins = totalMatches * (currentWinrate / 100);
             const targetDecimal = targetWinrate / 100;
 
             if (currentWinrate >= targetWinrate) {
@@ -331,7 +331,7 @@
                 winsNeeded = (totalMatches * targetDecimal - totalWins) / (1 - targetDecimal);
             }
             
-            if (winsNeeded < 0) { // Ini seharusnya tidak terjadi jika currentWinrate < targetWinrate
+            if (winsNeeded < 0) {
                 matchesNeededSpan.textContent = `Anda sudah mencapai atau melampaui target!`; 
                 matchesNeededElement.classList.remove('error');
             } else {
