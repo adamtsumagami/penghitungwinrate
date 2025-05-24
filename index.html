@@ -41,7 +41,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            /* overflow: hidden; Kita akan atur overflow hanya jika diperlukan di container utama */
+            overflow: hidden; /* Pastikan tidak ada scroll pada html/body */
         }
 
         body {
@@ -125,7 +125,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px; /* Jarak antar elemen di dalam box */
-            margin-bottom: 20px; /* Jarak antar box */
+            margin-bottom: 15px; /* JARAK DIKECILKAN ANTAR KOTAK */
             box-sizing: border-box;
         }
 
@@ -188,7 +188,8 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 15px; /* Jarak di atas tombol, setelah input section */
+            margin-bottom: 15px; /* Jarak di bawah tombol, sebelum output section */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             box-sizing: border-box;
         }
@@ -270,7 +271,7 @@
             .section-box {
                 padding: 15px;
                 gap: 10px;
-                margin-bottom: 15px;
+                margin-bottom: 12px; /* Disesuaikan untuk HP */
             }
             .section-title {
                 font-size: 1.1em;
@@ -286,6 +287,8 @@
             button {
                 padding: 10px 15px;
                 font-size: 0.95em;
+                margin-top: 12px; /* Disesuaikan untuk HP */
+                margin-bottom: 12px; /* Disesuaikan untuk HP */
             }
             .result-display {
                 font-size: 1em;
@@ -309,7 +312,7 @@
             .section-box {
                 padding: 12px;
                 gap: 8px;
-                margin-bottom: 12px;
+                margin-bottom: 10px; /* Disesuaikan untuk sangat kecil */
             }
             .section-title {
                 font-size: 1em;
@@ -324,6 +327,8 @@
             button {
                 padding: 8px 12px;
                 font-size: 0.9em;
+                margin-top: 10px;
+                margin-bottom: 10px;
             }
             .result-display {
                 font-size: 0.9em;
@@ -357,10 +362,10 @@
             </div>
         </div>
 
+        <button onclick="calculateWinrate()">🔥 Hitung</button>
+
         <div class="section-box">
             <h2 class="section-title">Hasil Perhitungan</h2>
-            <button onclick="calculateWinrate()">🔥 Hitung Perjalanan Anda</button>
-            <p id="calculatedCurrentWinrate" class="result-display">Winrate Saat Ini: <span>0.00%</span></p>
             <p id="matchesNeeded" class="result-display">Butuh <span>0</span> Win.</p>
         </div>
     </div>
@@ -373,13 +378,16 @@
             const currentWinrateInput = document.getElementById('currentWinrate');
             const targetWinrateInput = document.getElementById('targetWinrate');
 
+            // Kita masih perlu elemen ini untuk menampilkan pesan error validasi input total match dan current winrate
+            // Meskipun Winrate Saat Ini tidak ditampilkan secara langsung di output
             const calculatedCurrentWinrateElement = document.getElementById('calculatedCurrentWinrate');
-            const calculatedCurrentWinrateSpan = calculatedCurrentWinrateElement.querySelector('span');
+            const calculatedCurrentWinrateSpan = calculatedCurrentWinrateElement.querySelector('span'); // Span ini tidak akan terlihat oleh user
+            
             const matchesNeededElement = document.getElementById('matchesNeeded');
             const matchesNeededSpan = matchesNeededElement.querySelector('span');
 
             // Reset error states
-            calculatedCurrentWinrateElement.classList.remove('error');
+            calculatedCurrentWinrateElement.classList.remove('error'); // Tetap di-reset untuk validasi internal
             matchesNeededElement.classList.remove('error');
 
             const totalMatches = parseFloat(totalMatchesInput.value);
@@ -388,17 +396,14 @@
 
             // --- Validasi Input ---
             if (isNaN(totalMatches) || totalMatches < 0) {
-                calculatedCurrentWinrateSpan.textContent = "Total match tidak valid!";
-                calculatedCurrentWinrateElement.classList.add('error');
-                matchesNeededSpan.textContent = "Mohon perbaiki input.";
+                // Pesan error akan ditampilkan di elemen matchesNeeded karena calculatedCurrentWinrate sudah dihapus dari UI
+                matchesNeededSpan.textContent = "Total match tidak valid!";
                 matchesNeededElement.classList.add('error');
                 return;
             }
 
             if (isNaN(currentWinrate) || currentWinrate < 0 || currentWinrate > 100) {
-                calculatedCurrentWinrateSpan.textContent = "Winrate Anda tidak valid (0-100)!";
-                calculatedCurrentWinrateElement.classList.add('error');
-                matchesNeededSpan.textContent = "Mohon perbaiki input.";
+                matchesNeededSpan.textContent = "Winrate Anda tidak valid (0-100)!";
                 matchesNeededElement.classList.add('error');
                 return;
             }
@@ -409,10 +414,7 @@
                 return;
             }
 
-            // --- Perhitungan Winrate Saat Ini (dari input) ---
-            calculatedCurrentWinrateSpan.textContent = `${currentWinrate.toFixed(2)}%`;
-
-            // --- Logika Perhitungan Jumlah Kemenangan Beruntun (sesuai referensi) ---
+            // --- Logika Perhitungan Jumlah Kemenangan Beruntun ---
             const totalWins = totalMatches * (currentWinrate / 100);
             const targetDecimal = targetWinrate / 100;
 
@@ -431,12 +433,11 @@
                     matchesNeededElement.classList.remove('error');
                     return;
                 }
-            } else if (1 - targetDecimal === 0) { // Safety check for division by zero (should be caught by targetDecimal === 1)
+            } else if (1 - targetDecimal <= 0) { // Safety check for division by zero or negative denominator
                  matchesNeededSpan.textContent = `Tidak dapat menghitung untuk target WR ini.`;
                  matchesNeededElement.classList.add('error');
                  return;
             } else {
-                // Rumus dari referensi: x = (totalMatch * wrTarget - totalWin) / (1 - wrTarget)
                 winsNeeded = (totalMatches * targetDecimal - totalWins) / (1 - targetDecimal);
             }
             
