@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penghitung Winrate MLBB & Target - Catppuccin Style</title>
+    <title>Penghitung Winrate & Target MLBB</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
         /* Catppuccin Mocha Palette */
@@ -81,7 +81,7 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
             text-align: center;
             width: 90%;
-            max-width: 500px; /* Lebarkan sedikit untuk konten baru */
+            max-width: 500px;
             border: 1px solid var(--ctp-surface1);
             position: relative;
             z-index: 1;
@@ -96,6 +96,14 @@
             margin-bottom: 25px;
             font-size: 2.2em;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: var(--ctp-sky);
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .input-group {
@@ -208,14 +216,14 @@
 
         <hr>
 
-        <h2>🎯 Target Winrate</h2>
+        <h2>🎯 Target Winrate Impian Anda</h2>
 
         <div class="input-group">
-            <label for="targetWinrate">Target Winrate (%):</label>
+            <label for="targetWinrate">Winrate yang Anda Inginkan (%):</label>
             <input type="number" id="targetWinrate" placeholder="Contoh: 60" min="0" max="100">
         </div>
 
-        <button onclick="calculateWinrate()">🔥 Hitung Winrate & Target</button>
+        <button onclick="calculateWinrate()">🔥 Hitung Perjalanan Anda</button>
 
         <p id="targetResult">Butuh <span>0</span> kemenangan beruntun untuk mencapai target.</p>
     </div>
@@ -241,9 +249,9 @@
 
             // --- Bagian Perhitungan Winrate Saat Ini ---
             if (isNaN(totalMatches) || isNaN(totalWins) || totalMatches < 0 || totalWins < 0) {
-                resultSpan.textContent = "Input tidak valid!";
+                resultSpan.textContent = "Input pertandingan/kemenangan tidak valid!";
                 resultElement.classList.add('error');
-                targetResultSpan.textContent = "Mohon masukkan data valid untuk hitungan target.";
+                targetResultSpan.textContent = "Mohon perbaiki input dasar untuk hitungan target.";
                 targetResultElement.classList.add('error');
                 return;
             }
@@ -251,7 +259,7 @@
             if (totalWins > totalMatches) {
                 resultSpan.textContent = "Kemenangan tidak boleh lebih dari total pertandingan!";
                 resultElement.classList.add('error');
-                targetResultSpan.textContent = "Mohon masukkan data valid untuk hitungan target.";
+                targetResultSpan.textContent = "Mohon perbaiki input dasar untuk hitungan target.";
                 targetResultElement.classList.add('error');
                 return;
             }
@@ -271,24 +279,43 @@
                 return;
             }
 
+            if (totalMatches === 0 && targetWinrate > 0) {
+                // If no matches played yet and targeting > 0% winrate, you need wins equal to matches
+                targetResultSpan.textContent = `Mainkan dan menangkan ${targetWinrate} pertandingan beruntun untuk ${targetWinrate}% winrate.`;
+                targetResultElement.classList.remove('error');
+                return;
+            }
+            
             if (currentWinrate >= targetWinrate) {
                 targetResultSpan.textContent = `Anda sudah mencapai (${currentWinrate.toFixed(2)}%) atau melampaui target (${targetWinrate.toFixed(2)}%)!`;
-                targetResultElement.classList.remove('error'); // Ensure no error state if already met
+                targetResultElement.classList.remove('error'); 
                 return;
             }
 
             // Rumus: (currentWins + X) / (currentMatches + X) = targetWinrate / 100
-            // currentWins + X = (targetWinrate / 100) * (currentMatches + X)
-            // currentWins + X = (targetWinrate / 100 * currentMatches) + (targetWinrate / 100 * X)
-            // X - (targetWinrate / 100 * X) = (targetWinrate / 100 * currentMatches) - currentWins
-            // X * (1 - targetWinrate / 100) = (targetWinrate / 100 * currentMatches) - currentWins
             // X = ((targetWinrate / 100 * currentMatches) - currentWins) / (1 - targetWinrate / 100)
 
             const targetDecimal = targetWinrate / 100;
-            const winsNeeded = ((targetDecimal * totalMatches) - totalWins) / (1 - targetDecimal);
+            let winsNeeded = ((targetDecimal * totalMatches) - totalWins) / (1 - targetDecimal);
 
-            if (winsNeeded < 0) { // Should technically be caught by currentWinrate >= targetWinrate, but for safety
-                targetResultSpan.textContent = `Anda sudah mencapai atau melampaui target!`;
+            // Handle edge case where winrate approaches 100% and denominator becomes 0
+            if (1 - targetDecimal === 0 && targetWinrate === 100) {
+                 if (totalWins === totalMatches) { // Already 100% winrate
+                    winsNeeded = 0;
+                 } else { // Need infinite wins to reach 100% if not already there
+                    targetResultSpan.textContent = `Butuh kemenangan tak terbatas untuk mencapai 100% winrate dari posisi ini!`;
+                    targetResultElement.classList.remove('error');
+                    return;
+                 }
+            } else if (1 - targetDecimal <= 0) { // Should not happen with targetWinrate < 100, but for safety
+                 targetResultSpan.textContent = `Tidak dapat menghitung untuk target winrate ini.`;
+                 targetResultElement.classList.add('error');
+                 return;
+            }
+
+
+            if (winsNeeded < 0) { 
+                targetResultSpan.textContent = `Anda sudah mencapai atau melampaui target!`; // Should be caught by earlier check, but good to have.
                 targetResultElement.classList.remove('error');
             } else {
                 targetResultSpan.textContent = `Butuh sekitar ${Math.ceil(winsNeeded)} kemenangan beruntun untuk mencapai target.`;
