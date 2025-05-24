@@ -378,17 +378,14 @@
             const currentWinrateInput = document.getElementById('currentWinrate');
             const targetWinrateInput = document.getElementById('targetWinrate');
 
-            // Kita masih perlu elemen ini untuk menampilkan pesan error validasi input total match dan current winrate
-            // Meskipun Winrate Saat Ini tidak ditampilkan secara langsung di output
-            const calculatedCurrentWinrateElement = document.getElementById('calculatedCurrentWinrate');
-            const calculatedCurrentWinrateSpan = calculatedCurrentWinrateElement.querySelector('span'); // Span ini tidak akan terlihat oleh user
+            // Kita TIDAK perlu lagi mencari elemen 'calculatedCurrentWinrate' karena sudah dihapus dari HTML
+            // dan pesan error akan diarahkan ke 'matchesNeededElement'
             
             const matchesNeededElement = document.getElementById('matchesNeeded');
             const matchesNeededSpan = matchesNeededElement.querySelector('span');
 
-            // Reset error states
-            calculatedCurrentWinrateElement.classList.remove('error'); // Tetap di-reset untuk validasi internal
-            matchesNeededElement.classList.remove('error');
+            // Reset error state
+            matchesNeededElement.classList.remove('error'); // Cukup reset ini saja
 
             const totalMatches = parseFloat(totalMatchesInput.value);
             const currentWinrate = parseFloat(currentWinrateInput.value);
@@ -396,7 +393,6 @@
 
             // --- Validasi Input ---
             if (isNaN(totalMatches) || totalMatches < 0) {
-                // Pesan error akan ditampilkan di elemen matchesNeeded karena calculatedCurrentWinrate sudah dihapus dari UI
                 matchesNeededSpan.textContent = "Total match tidak valid!";
                 matchesNeededElement.classList.add('error');
                 return;
