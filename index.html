@@ -99,7 +99,7 @@
             height: 85vh;
             max-height: 550px;
             overflow: hidden; /* Sembunyikan scroll jika masih ada */
-            justify-content: space-between;
+            justify-content: space-between; /* Untuk footer di bawah */
         }
 
         h1 {
@@ -113,12 +113,11 @@
 
         .content-area {
             display: flex;
-            flex-grow: 1;
+            flex-grow: 1; /* Ambil sisa ruang vertikal */
             width: 100%;
             gap: 20px;
             justify-content: center;
             align-items: flex-start;
-            /* Tidak ada margin-bottom di sini, agar tombol di output-section yang mengaturnya */
         }
 
         .input-section, .output-section {
@@ -130,12 +129,11 @@
             padding: 15px;
             border-radius: 10px;
             border: 1px solid var(--ctp-surface1);
-            height: 100%; /* Agar mengisi tinggi parent .content-area */
+            height: 100%; /* Mengisi tinggi parent .content-area */
         }
 
         .output-section {
-            /* Perubahan di sini: Menggunakan justify-content untuk mengatur spasi internal */
-            justify-content: space-around; /* Distribusi ruang yang lebih baik */
+            justify-content: space-around;
         }
 
         .section-title {
@@ -192,7 +190,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
             width: 100%;
-            margin-top: 10px; /* Jarak di atas tombol */
+            margin-top: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
@@ -229,6 +227,25 @@
         }
         .error span {
             color: var(--ctp-red) !important;
+        }
+
+        /* Footer / Watermark Styling */
+        .footer-watermark {
+            margin-top: 20px; /* Jarak dari konten di atasnya */
+            font-size: 0.8em; /* Ukuran font watermark */
+            color: var(--ctp-subtext0); /* Warna teks yang lebih samar */
+            text-align: center;
+        }
+
+        .footer-watermark a {
+            color: var(--ctp-blue); /* Warna link */
+            text-decoration: none; /* Tanpa garis bawah default */
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .footer-watermark a:hover {
+            color: var(--ctp-sapphire); /* Warna link saat hover */
         }
 
         /* --- Media Queries for Responsiveness (HP/Small Screens) --- */
@@ -284,6 +301,11 @@
             .result-display span {
                 font-size: 0.95em;
             }
+
+            .footer-watermark {
+                font-size: 0.75em; /* Kecilkan ukuran font watermark di HP */
+                margin-top: 15px; /* Kurangi margin di HP */
+            }
         }
     </style>
 </head>
@@ -312,9 +334,14 @@
 
             <div class="output-section">
                 <h2 class="section-title">Hasil Perhitungan</h2>
-                <button onclick="calculateWinrate()">🔥 Hitung Perjalanan Anda</button> <p id="calculatedCurrentWinrate" class="result-display">Winrate Saat Ini: <span>0.00%</span></p>
+                <button onclick="calculateWinrate()">🔥 Hitung Perjalanan Anda</button>
+                <p id="calculatedCurrentWinrate" class="result-display">Winrate Saat Ini: <span>0.00%</span></p>
                 <p id="matchesNeeded" class="result-display">Butuh <span>0</span> Win.</p>
             </div>
+        </div>
+
+        <div class="footer-watermark">
+            Made with ♥ by <a href="https://www.instagram.com/adamtsumagami/" target="_blank" rel="noopener noreferrer">Adam Tsumagami</a>
         </div>
     </div>
 
@@ -325,7 +352,7 @@
             const targetWinrateInput = document.getElementById('targetWinrate');
 
             const calculatedCurrentWinrateElement = document.getElementById('calculatedCurrentWinrate');
-            const calculatedCurrentWinrateSpan = calculatedCurrentWinrateElement.querySelector('span');
+            const calculatedCurrentWinrateSpan = calculatedCurrentCurrentWinrateElement.querySelector('span');
             const matchesNeededElement = document.getElementById('matchesNeeded');
             const matchesNeededSpan = matchesNeededElement.querySelector('span');
 
