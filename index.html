@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penghitung Winrate MLBB</title>
+    <title>Kalkulator Winrate MLBB</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
         /* Catppuccin Mocha Palette */
@@ -41,20 +41,23 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Mencegah scroll pada html/body */
+            /* overflow: hidden; Kita akan atur overflow hanya jika diperlukan di container utama */
         }
 
         body {
             font-family: 'Fira Code', monospace;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column; /* Mengatur item utama (container & watermark) secara vertikal */
+            justify-content: center; /* Memusatkan konten secara vertikal */
+            align-items: center; /* Memusatkan konten secara horizontal */
             background: linear-gradient(135deg, var(--ctp-crust), var(--ctp-base));
             color: var(--ctp-text);
             position: relative;
+            box-sizing: border-box; /* Pastikan padding tidak menambah ukuran total */
+            padding-bottom: 30px; /* Ruang untuk watermark di bagian bawah */
         }
 
-        /* Background blur shapes (unchanged) */
+        /* Background blur shapes */
         body::before, body::after {
             content: '';
             position: absolute;
@@ -80,72 +83,66 @@
             background: var(--ctp-blue);
         }
 
-        .main-container {
+        .main-content-wrapper {
             background-color: rgba(49, 50, 68, 0.7); /* Glassmorphism base */
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             
-            padding: 25px;
+            padding: 25px; /* Padding utama container */
             border-radius: 15px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
             border: 1px solid var(--ctp-surface1);
             
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: column; /* Semua elemen di dalam akan tersusun vertikal */
+            align-items: center; /* Pusatkan secara horizontal */
             
-            width: 90vw;
-            max-width: 650px;
-            height: 85vh;
-            max-height: 550px;
-            overflow: hidden; /* Sembunyikan scroll jika masih ada */
-            justify-content: space-between; /* Untuk footer di bawah */
+            width: 90vw; /* Lebar relatif terhadap viewport */
+            max-width: 450px; /* Batasi lebar maksimum agar terlihat seperti kartu tunggal */
+            
+            /* Fleksibilitas tinggi untuk menghindari scroll, sambil memberi batasan */
+            flex-grow: 1; /* Biarkan mengambil ruang yang tersedia */
+            max-height: calc(100vh - 60px); /* Kurangi tinggi untuk watermark di bawah */
+            overflow-y: auto; /* Izinkan scroll jika konten benar-benar tidak muat */
+            box-sizing: border-box;
         }
 
         h1 {
             color: var(--ctp-lavender);
             font-size: 1.8em;
             margin-top: 0;
-            margin-bottom: 20px;
+            margin-bottom: 25px; /* Jarak yang cukup setelah judul */
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
 
-        .content-area {
-            display: flex;
-            flex-grow: 1; /* Ambil sisa ruang vertikal */
-            width: 100%;
-            gap: 20px;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .input-section, .output-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .section-box { /* Mengganti input-section dan output-section menjadi satu gaya box */
             background-color: var(--ctp-mantle);
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             border: 1px solid var(--ctp-surface1);
-            height: 100%; /* Mengisi tinggi parent .content-area */
+            width: 100%; /* Ambil lebar penuh dari main-content-wrapper */
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Jarak antar elemen di dalam box */
+            margin-bottom: 20px; /* Jarak antar box */
+            box-sizing: border-box;
         }
 
-        .output-section {
-            justify-content: space-around;
+        .section-box:last-of-type {
+            margin-bottom: 0; /* Hapus margin bawah untuk box terakhir */
         }
 
         .section-title {
             color: var(--ctp-sky);
-            font-size: 1.2em;
+            font-size: 1.3em;
             margin-top: 0;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             text-align: center;
         }
 
         .input-group {
-            margin-bottom: 0;
+            margin-bottom: 0; /* Diatur oleh gap parent */
             text-align: left;
         }
 
@@ -158,7 +155,7 @@
         }
 
         .input-group input[type="number"] {
-            width: calc(100% - 20px);
+            width: calc(100% - 20px); /* Kurangi padding dari total width */
             padding: 8px;
             border: 1px solid var(--ctp-surface1);
             border-radius: 8px;
@@ -168,6 +165,7 @@
             outline: none;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box; /* Penting untuk width calc */
         }
 
         .input-group input[type="number"]::placeholder {
@@ -192,6 +190,7 @@
             width: 100%;
             margin-top: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
         }
 
         button:hover {
@@ -213,6 +212,7 @@
             border-radius: 8px;
             border: 1px dashed var(--ctp-surface2);
             text-align: center;
+            box-sizing: border-box;
         }
 
         .result-display span {
@@ -229,121 +229,143 @@
             color: var(--ctp-red) !important;
         }
 
-        /* Footer / Watermark Styling */
-        .footer-watermark {
-            margin-top: 20px; /* Jarak dari konten di atasnya */
-            font-size: 0.8em; /* Ukuran font watermark */
-            color: var(--ctp-subtext0); /* Warna teks yang lebih samar */
+        /* Watermark Styling */
+        .watermark {
+            margin-top: 20px; /* Jarak dari container utama */
+            color: var(--ctp-subtext0); /* Warna teks yang lembut */
+            font-size: 0.8em;
             text-align: center;
+            position: fixed; /* Membuat watermark tetap di bagian bawah */
+            bottom: 10px; /* Jarak dari bawah viewport */
+            left: 50%;
+            transform: translateX(-50%); /* Pusatkan secara horizontal */
+            z-index: 100; /* Pastikan di atas elemen lain */
+            width: 100%; /* Ambil lebar penuh untuk pusatkan teks */
         }
 
-        .footer-watermark a {
-            color: var(--ctp-blue); /* Warna link */
-            text-decoration: none; /* Tanpa garis bawah default */
-            font-weight: 600;
+        .watermark a {
+            color: var(--ctp-mauve); /* Warna link */
+            text-decoration: none;
             transition: color 0.3s ease;
         }
 
-        .footer-watermark a:hover {
-            color: var(--ctp-sapphire); /* Warna link saat hover */
+        .watermark a:hover {
+            color: var(--ctp-lavender);
         }
 
         /* --- Media Queries for Responsiveness (HP/Small Screens) --- */
         @media (max-width: 768px) {
-            .main-container {
-                padding: 20px;
-                width: 95vw;
-                height: auto;
-                max-height: 95vh;
-                overflow-y: auto; /* Izinkan scroll jika konten tidak muat di HP */
-                gap: 15px;
+            body {
+                padding-bottom: 25px; /* Sesuaikan padding bawah untuk watermark di HP */
             }
-
+            .main-content-wrapper {
+                padding: 18px;
+                width: 95vw;
+                max-height: calc(100vh - 55px); /* Sesuaikan tinggi untuk watermark di HP */
+            }
             h1 {
                 font-size: 1.5em;
+                margin-bottom: 20px;
             }
-
-            .content-area {
-                flex-direction: column; /* Tumpuk kolom di HP */
-                gap: 15px;
-            }
-            
-            .input-section, .output-section {
-                padding: 12px;
+            .section-box {
+                padding: 15px;
                 gap: 10px;
-                min-width: unset;
-                height: auto;
+                margin-bottom: 15px;
             }
-
             .section-title {
                 font-size: 1.1em;
+                margin-bottom: 10px;
             }
-
             .input-group label {
                 font-size: 0.8em;
             }
-
             .input-group input[type="number"] {
-                padding: 6px;
+                padding: 7px;
                 font-size: 0.85em;
             }
-
             button {
                 padding: 10px 15px;
                 font-size: 0.95em;
             }
-
             .result-display {
                 font-size: 1em;
-                padding: 6px;
+                padding: 7px;
             }
-
-            .result-display span {
-                font-size: 0.95em;
+            .watermark {
+                font-size: 0.75em;
+                bottom: 5px; /* Lebih mepet ke bawah di HP */
             }
+        }
 
-            .footer-watermark {
-                font-size: 0.75em; /* Kecilkan ukuran font watermark di HP */
-                margin-top: 15px; /* Kurangi margin di HP */
+        @media (max-width: 480px) {
+            .main-content-wrapper {
+                padding: 15px;
+                max-height: calc(100vh - 50px);
+            }
+            h1 {
+                font-size: 1.3em;
+                margin-bottom: 15px;
+            }
+            .section-box {
+                padding: 12px;
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+            .section-title {
+                font-size: 1em;
+            }
+            .input-group label {
+                font-size: 0.7em;
+            }
+            .input-group input[type="number"] {
+                padding: 5px;
+                font-size: 0.8em;
+            }
+            button {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+            .result-display {
+                font-size: 0.9em;
+                padding: 5px;
+            }
+            .watermark {
+                font-size: 0.7em;
             }
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
+    <div class="main-content-wrapper">
         <h1>⚔️ Penghitung Winrate MLBB 🛡️</h1>
 
-        <div class="content-area">
-            <div class="input-section">
-                <h2 class="section-title">Masukkan Data Anda</h2>
-                <div class="input-group">
-                    <label for="totalMatches">Total Match Anda:</label>
-                    <input type="number" id="totalMatches" placeholder="Cth: 259" min="0">
-                </div>
-
-                <div class="input-group">
-                    <label for="currentWinrate">Total WR Anda (%):</label>
-                    <input type="number" id="currentWinrate" placeholder="Cth: 76.4" step="0.1" min="0" max="100">
-                </div>
-
-                <div class="input-group">
-                    <label for="targetWinrate">WR yang Anda Inginkan (%):</label>
-                    <input type="number" id="targetWinrate" placeholder="Cth: 80" step="0.1" min="0" max="100">
-                </div>
+        <div class="section-box">
+            <h2 class="section-title">Masukkan Data Anda</h2>
+            <div class="input-group">
+                <label for="totalMatches">Total Match Anda:</label>
+                <input type="number" id="totalMatches" placeholder="Cth: 259" min="0">
             </div>
 
-            <div class="output-section">
-                <h2 class="section-title">Hasil Perhitungan</h2>
-                <button onclick="calculateWinrate()">🔥 Hitung Perjalanan Anda</button>
-                <p id="calculatedCurrentWinrate" class="result-display">Winrate Saat Ini: <span>0.00%</span></p>
-                <p id="matchesNeeded" class="result-display">Butuh <span>0</span> Win.</p>
+            <div class="input-group">
+                <label for="currentWinrate">Total WR Anda (%):</label>
+                <input type="number" id="currentWinrate" placeholder="Cth: 76.4" step="0.1" min="0" max="100">
+            </div>
+
+            <div class="input-group">
+                <label for="targetWinrate">WR yang Anda Inginkan (%):</label>
+                <input type="number" id="targetWinrate" placeholder="Cth: 80" step="0.1" min="0" max="100">
             </div>
         </div>
 
-        <div class="footer-watermark">
-            Made with ♥ by <a href="https://www.instagram.com/adamtsumagami/" target="_blank" rel="noopener noreferrer">Adam Tsumagami</a>
+        <div class="section-box">
+            <h2 class="section-title">Hasil Perhitungan</h2>
+            <button onclick="calculateWinrate()">🔥 Hitung Perjalanan Anda</button>
+            <p id="calculatedCurrentWinrate" class="result-display">Winrate Saat Ini: <span>0.00%</span></p>
+            <p id="matchesNeeded" class="result-display">Butuh <span>0</span> Win.</p>
         </div>
     </div>
+
+    <p class="watermark">Made with ♥ by <a href="https://www.instagram.com/adamtsumagami/" target="_blank" rel="noopener noreferrer">Adam Tsumagami</a></p>
 
     <script>
         function calculateWinrate() {
@@ -352,7 +374,7 @@
             const targetWinrateInput = document.getElementById('targetWinrate');
 
             const calculatedCurrentWinrateElement = document.getElementById('calculatedCurrentWinrate');
-            const calculatedCurrentWinrateSpan = calculatedCurrentCurrentWinrateElement.querySelector('span');
+            const calculatedCurrentWinrateSpan = calculatedCurrentWinrateElement.querySelector('span');
             const matchesNeededElement = document.getElementById('matchesNeeded');
             const matchesNeededSpan = matchesNeededElement.querySelector('span');
 
