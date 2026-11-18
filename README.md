@@ -1,71 +1,61 @@
-# ⚔️ MLBB Winrate & Target Calculator 🎯
+# Penghitung Winrate MLBB
 
-![MLBB Winrate Calculator Screenshot](webss.png)
+![Tampilan aplikasi](webss.png)
 
-Sebuah aplikasi web sederhana untuk menghitung winrate Mobile Legends: Bang Bang Anda saat ini dan menentukan berapa banyak kemenangan beruntun yang Anda butuhkan untuk mencapai target winrate tertentu! Dibuat dengan HTML, CSS, dan JavaScript murni, menampilkan desain modern dengan efek glassmorphism dan palet warna Catppuccin yang menawan.
+Aplikasi web satu halaman untuk menghitung winrate Mobile Legends: Bang Bang Anda saat ini dan berapa kemenangan beruntun yang dibutuhkan untuk mencapai target winrate. Murni HTML, CSS, dan JavaScript, tanpa dependensi atau build step. Semua perhitungan berjalan di browser; tidak ada data yang dikirim ke server mana pun.
 
----
+## Fitur
 
-## ✨ Fitur Utama
+- Perhitungan langsung: hasil muncul saat Anda mengetik, tanpa tombol hitung.
+- Gauge winrate: busur 300 derajat menunjukkan winrate saat ini, garis penanda menunjukkan target.
+- Panel hasil: jumlah win beruntun yang dibutuhkan, estimasi winrate setelah streak, tombol **Salin hasil** ke clipboard.
+- Validasi per kolom: input winrate di luar 0 sampai 100 atau total match di bawah 1 ditandai merah.
+- Estimasi kemenangan: dari total match x winrate Anda (dibulatkan).
+- Target cepat: tombol 50/60/70/80% untuk mengisi target winrate.
+- Tersimpan otomatis: input tersimpan di `localStorage` dan dimuat saat halaman dibuka kembali.
 
-* **Hitung Winrate Saat Ini**: Masukkan total pertandingan dan total kemenangan Anda untuk melihat persentase winrate Anda saat ini.
-* **Target Winrate**: Tentukan winrate yang ingin Anda capai (misalnya, 60% atau 70%).
-* **Kemenangan Beruntun yang Dibutuhkan**: Aplikasi akan menghitung perkiraan jumlah kemenangan beruntun yang Anda perlukan untuk mencapai target winrate tersebut.
-* **Desain Modern & Responsif**: Tampilan menarik dengan efek _glassmorphism_ dan palet warna Catppuccin (Mocha) yang nyaman di mata.
-* **Validasi Input**: Peringatan untuk input yang tidak valid atau logika yang salah.
+## Cara kerja
 
----
+Hitungan mengasumsikan semua match berikutnya Anda menangkan. Dengan total match `T`, winrate saat ini `W`, dan target `G` (persen):
 
-## 🚀 Cara Menggunakan
+```
+n = ceil( (T * G/100 - T * W/100) / (1 - G/100) )
+```
 
-1.  **Akses Aplikasi**:
-    * **Online (Vercel/GitHub Pages)**: Kunjungi [Penghitung WR](https://penghitung-wr.vercel.app/) (Misalnya: `https://mlbb-winrate-calculator.vercel.app/` atau `https://username.github.io/nama-repo-anda/`).
-    * **Lokal**:
-        1.  Clone repositori ini: `git clone https://github.com/adamtsumagami/penghitungwinrate.git`
-        2.  Masuk ke direktori proyek: `cd penghitungwinrate`
-        3.  Buka file `index.html`
+`n` adalah jumlah win beruntun terkecil yang membuat winrate `(win + n) / (T + n)` tidak di bawah target.
 
-2.  **Masukkan Data Anda**:
-    * Pada kolom "Total Pertandingan", masukkan jumlah total pertandingan yang sudah Anda mainkan.
-    * Pada kolom "Total Kemenangan", masukkan jumlah kemenangan yang sudah Anda raih.
-    * Pada kolom "Target Winrate (%)", masukkan persentase winrate yang ingin Anda capai (contoh: `60`).
+Aturan khusus:
 
-3.  **Lihat Hasil**:
-    * Klik tombol "**🔥 Hitung Winrate & Target**".
-    * Winrate Anda saat ini akan ditampilkan.
-    * Jumlah kemenangan beruntun yang Anda perlukan untuk mencapai target winrate akan muncul di bawahnya.
+- Jika `G` = 100, tidak mungkin tercapai lewat streak; kekalahan yang sudah tercatat tidak bisa dihapus.
+- Jika winrate Anda sudah di atas atau sama dengan target, hasilnya "Target sudah tercapai".
 
----
+Contoh: `T` = 1500, `W` = 75,6 (≈1134 win), `G` = 80,5. `n` = ceil((1207,5 − 1134) / 0,195) = ceil(376,92) = **377 win beruntun**, winrate menjadi ≈80,5%.
 
-## 🛠️ Teknologi yang Digunakan
+## Menjalankan secara lokal
 
-* **HTML5**: Untuk struktur halaman.
-* **CSS3**: Untuk styling dan efek visual (termasuk _glassmorphism_ dan warna Catppuccin).
-* **JavaScript**: Untuk logika perhitungan winrate dan target.
+Tidak perlu build. Clone dan buka `index.html`:
 
----
+```
+git clone https://github.com/adamtsumagami/penghitungwinrate.git
+cd penghitungwinrate
+```
 
-## 🤝 Kontribusi
+Buka `index.html` di browser, atau sajikan folder ini dengan server statis apa pun, misalnya `python -m http.server`.
 
-Saran dan kontribusi sangat diterima! Jika Anda memiliki ide untuk fitur baru, perbaikan bug, atau peningkatan desain, silakan:
+Versi online: https://penghitung-wr.vercel.app/
 
-1.  *Fork* repositori ini.
-2.  Buat branch baru (`git checkout -b feature/nama-fitur`).
-3.  Lakukan perubahan Anda.
-4.  *Commit* perubahan Anda (`git commit -m 'Add new feature'`).
-5.  *Push* ke branch Anda (`git push origin feature/nama-fitur`).
-6.  Buka *Pull Request* baru.
+## Struktur kode
 
----
+Seluruh aplikasi ada di `index.html`: markup, CSS, dan JavaScript. Satu-satunya sumber eksternal adalah Google Fonts (Chakra Petch dan Inter).
 
-## 📄 Lisensi
+## Kontribusi
 
-Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+Pull request diterima. Untuk perubahan tampilan atau logika perhitungan, jelaskan alasannya di deskripsi PR.
 
----
+## Lisensi
 
-## 📧 Kontak
+MIT
 
-Jika Anda memiliki pertanyaan atau ingin menghubungi, Anda bisa menemukan saya di [Profil GitHub Anda](https://github.com/USERNAME_GITHUB_ANDA).
+## Kontak
 
----
+https://github.com/adamtsumagami

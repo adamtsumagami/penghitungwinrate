@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Winrate MLBB</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <title>Penghitung Winrate MLBB</title>
+    <meta name="description" content="Hitung winrate Anda saat ini di Mobile Legends: Bang Bang dan berapa kemenangan beruntun yang dibutuhkan untuk mencapai target winrate.">
+    <meta name="theme-color" content="#181825">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23181825'/%3E%3Cg transform='rotate(-45 24 24)' fill='%23b4befe'%3E%3Cpath d='M24 4 L27 15 L27 28 L21 28 L21 15 Z'/%3E%3Crect x='15' y='28' width='18' height='3.2' rx='1.6'/%3E%3Crect x='22.3' y='31.2' width='3.4' height='6'/%3E%3Ccircle cx='24' cy='40' r='2.2'/%3E%3C/g%3E%3Cg transform='rotate(45 24 24)' fill='%239399b2'%3E%3Cpath d='M24 4 L27 15 L27 28 L21 28 L21 15 Z'/%3E%3Crect x='15' y='28' width='18' height='3.2' rx='1.6'/%3E%3Crect x='22.3' y='31.2' width='3.4' height='6'/%3E%3Ccircle cx='24' cy='40' r='2.2'/%3E%3C/g%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
     <style>
-        /* Catppuccin Mocha Palette */
         :root {
             --ctp-rosewater: #f5e0dc;
-            --ctp-flamingo: #f2cdcd;
             --ctp-pink: #f5c2e7;
             --ctp-mauve: #cba6f7;
             --ctp-red: #f38ba8;
-            --ctp-maroon: #eba0ac;
             --ctp-peach: #fab387;
             --ctp-yellow: #f9e2af;
             --ctp-green: #a6e3a1;
             --ctp-teal: #94e2d5;
             --ctp-sky: #89dceb;
-            --ctp-sapphire: #74c7ec;
             --ctp-blue: #89b4fa;
             --ctp-lavender: #b4befe;
             --ctp-text: #cdd6f4;
             --ctp-subtext1: #bac2de;
             --ctp-subtext0: #a6adbb;
             --ctp-overlay2: #9399b2;
-            --ctp-overlay1: #7f849c;
             --ctp-overlay0: #6c7086;
             --ctp-surface2: #585b70;
             --ctp-surface1: #45475a;
@@ -36,426 +36,718 @@
             --ctp-crust: #11111b;
         }
 
-        /* Essential for fullscreen and no scroll */
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Mencegah scroll pada html/body */
-            font-size: 16px; /* Base font size, will be scaled down for mobile */
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { -webkit-text-size-adjust: 100%; }
 
         body {
-            font-family: 'Fira Code', monospace;
+            font-family: 'Inter', system-ui, sans-serif;
+            color: var(--ctp-text);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px 16px;
+            background:
+                radial-gradient(1100px 700px at 12% -12%, rgba(203, 166, 247, 0.16), transparent 60%),
+                radial-gradient(900px 650px at 112% 112%, rgba(137, 180, 250, 0.13), transparent 55%),
+                linear-gradient(160deg, var(--ctp-crust) 0%, var(--ctp-base) 75%);
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        /* FeTurbulence noise, opacity 0.05: keeps the dark backdrop from reading as a flat AI gradient */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Two panels, one elevation: the shell lifts above the backdrop, panels stay flat */
+        .shell {
+            width: min(920px, 100%);
+            display: grid;
+            grid-template-columns: 1.12fr 1fr;
+            background: var(--ctp-base);
+            border: 1px solid var(--ctp-surface0);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+        }
+
+        .panel { padding: 28px; }
+
+        .panel-form { display: flex; flex-direction: column; }
+
+        .panel-result {
+            background: var(--ctp-mantle);
+            border-left: 1px solid var(--ctp-surface0);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .emblem { flex-shrink: 0; }
+
+        h1 {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.35rem, 2.4vw, 1.65rem);
+            line-height: 1.15;
+            color: var(--ctp-text);
+            letter-spacing: 0.01em;
+        }
+
+        h1 .mlbb { color: var(--ctp-lavender); }
+
+        .tagline {
+            margin-top: 4px;
+            font-size: 0.82rem;
+            line-height: 1.45;
+            color: var(--ctp-subtext0);
+        }
+
+        form { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--ctp-subtext1);
+        }
+
+        .control { position: relative; }
+
+        input[type="number"] {
+            width: 100%;
+            height: 46px;
+            padding: 0 14px;
+            font: 500 1rem 'Inter', system-ui, sans-serif;
+            font-variant-numeric: tabular-nums;
+            color: var(--ctp-text);
+            background: var(--ctp-crust);
+            border: 1px solid var(--ctp-surface0);
+            border-radius: 10px;
+            outline: none;
+            appearance: textfield;
+            -moz-appearance: textfield;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        input[type="number"]::placeholder { color: var(--ctp-overlay0); }
+
+        input[type="number"]:focus-visible {
+            border-color: var(--ctp-lavender);
+            box-shadow: 0 0 0 3px rgba(180, 190, 254, 0.3);
+        }
+
+        input[type="number"][aria-invalid="true"] { border-color: var(--ctp-red); }
+        input[type="number"][aria-invalid="true"]:focus-visible { box-shadow: 0 0 0 3px rgba(243, 139, 168, 0.3); }
+
+        .has-suffix input { padding-right: 38px; }
+
+        .suffix {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            color: var(--ctp-subtext0);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .field-hint {
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: var(--ctp-subtext0);
+            font-variant-numeric: tabular-nums;
+            min-height: 1.1em;
+        }
+
+        .field-error {
+            margin-top: 6px;
+            font-size: 0.78rem;
+            color: var(--ctp-red);
+        }
+
+        .chips { display: flex; gap: 8px; margin-top: 8px; }
+
+        .chip {
+            min-width: 52px;
+            min-height: 44px;
+            padding: 0 12px;
+            font: 600 0.85rem 'Inter', system-ui, sans-serif;
+            color: var(--ctp-subtext1);
+            background: transparent;
+            border: 1px solid var(--ctp-surface1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+        }
+
+        .chip:hover { border-color: var(--ctp-lavender); color: var(--ctp-text); }
+
+        .chip[aria-pressed="true"] {
+            border-color: var(--ctp-lavender);
+            color: var(--ctp-lavender);
+            background: rgba(180, 190, 254, 0.12);
+        }
+
+        .chip:focus-visible, .btn-primary:focus-visible, .btn-ghost:focus-visible, .watermark a:focus-visible {
+            outline: 2px solid var(--ctp-lavender);
+            outline-offset: 2px;
+        }
+
+        .form-actions { display: flex; justify-content: flex-end; }
+
+        .formula {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid var(--ctp-surface0);
+            font-size: 0.7rem;
+            line-height: 1.5;
+            color: var(--ctp-overlay2);
+        }
+
+        .btn-ghost {
+            min-height: 44px;
+            padding: 0 16px;
+            font: 500 0.85rem 'Inter', system-ui, sans-serif;
+            color: var(--ctp-subtext0);
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .btn-ghost:hover { color: var(--ctp-text); border-color: var(--ctp-surface1); }
+
+        .result-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--ctp-subtext0);
+            align-self: flex-start;
+        }
+
+        .gauge-wrap {
+            position: relative;
+            width: min(208px, 58vw);
+        }
+
+        .gauge { width: 100%; height: auto; display: block; }
+
+        .gauge-track {
+            fill: none;
+            stroke: var(--ctp-surface0);
+            stroke-width: 14;
+            stroke-linecap: round;
+        }
+
+        .gauge-value {
+            fill: none;
+            stroke: url(#gaugeGrad);
+            stroke-width: 14;
+            stroke-linecap: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            opacity: 0;
+            transition: stroke-dashoffset 0.6s ease, opacity 0.3s ease;
+        }
+
+        .gauge-end { fill: var(--ctp-overlay2); font-size: 11px; font-family: 'Inter', system-ui, sans-serif; }
+
+        .target-tick line { stroke: var(--ctp-text); stroke-width: 3.5; stroke-linecap: round; opacity: 0.9; }
+
+        .gauge-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            text-align: center;
+        }
+
+        .gauge-number {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            color: var(--ctp-text);
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+        }
+
+        .gauge-caption { font-size: 0.7rem; color: var(--ctp-subtext0); }
+
+        .legend {
+            display: flex;
+            gap: 18px;
+            font-size: 0.72rem;
+            color: var(--ctp-subtext0);
+        }
+
+        .legend span { display: inline-flex; align-items: center; gap: 6px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .dot-current { background: linear-gradient(135deg, var(--ctp-green), var(--ctp-teal)); }
+        .dot-target { border: 2px solid var(--ctp-text); background: transparent; width: 8px; height: 8px; }
+
+        .result-body {
+            width: 100%;
+            border-top: 1px solid var(--ctp-surface0);
+            padding-top: 14px;
+            text-align: center;
+            min-height: 132px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, var(--ctp-crust), var(--ctp-base));
-            color: var(--ctp-text);
-            position: relative;
-            box-sizing: border-box;
-            padding-bottom: 30px; /* Ruang untuk watermark di bagian bawah */
+            gap: 4px;
         }
 
-        /* Background blur shapes */
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.2;
-            z-index: -1;
-        }
+        .result-idle { color: var(--ctp-overlay2); font-size: 0.9rem; line-height: 1.55; }
 
-        body::before {
-            top: 10%;
-            left: 10%;
-            transform: rotate(45deg);
-            background: var(--ctp-red);
-        }
+        .result-error { color: var(--ctp-red); font-size: 0.9rem; line-height: 1.55; }
 
-        body::after {
-            bottom: 10%;
-            right: 10%;
-            transform: rotate(-30deg);
-            background: var(--ctp-blue);
-        }
-
-        .main-content-wrapper {
-            background-color: rgba(49, 50, 68, 0.7);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--ctp-surface1);
-            
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            
-            width: 90vw;
-            max-width: 450px; /* Batasi lebar untuk desktop/tablet */
-            
-            flex-grow: 1;
-            max-height: calc(100vh - 60px); /* Memperhitungkan padding-bottom body dan watermark */
-            overflow-y: auto; /* Izinkan scroll jika konten benar-benar tidak muat */
-            box-sizing: border-box;
-        }
-
-        h1 {
-            color: var(--ctp-lavender);
-            font-size: 1.8em;
-            margin-top: 0;
-            margin-bottom: 25px;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-
-        .section-box {
-            background-color: var(--ctp-mantle);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid var(--ctp-surface1);
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-        }
-
-        .section-box:last-of-type {
-            margin-bottom: 0;
-        }
-
-        .section-title {
-            color: var(--ctp-sky);
-            font-size: 1.3em;
-            margin-top: 0;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .input-group {
-            margin-bottom: 0;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
+        .result-kicker {
+            font-size: 0.78rem;
             font-weight: 600;
-            color: var(--ctp-subtext1);
-            font-size: 0.85em;
-        }
-
-        .input-group input[type="number"] {
-            width: calc(100% - 20px);
-            padding: 8px;
-            border: 1px solid var(--ctp-surface1);
-            border-radius: 8px;
-            background-color: var(--ctp-crust);
-            color: var(--ctp-text);
-            font-size: 0.9em;
-            outline: none;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            box-sizing: border-box;
-        }
-
-        .input-group input[type="number"]::placeholder {
-            color: var(--ctp-overlay0);
-        }
-
-        .input-group input[type="number"]:focus {
-            border-color: var(--ctp-blue);
-            box-shadow: 0 0 0 2px var(--ctp-blue), inset 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        button {
-            background-color: var(--ctp-green);
-            color: var(--ctp-crust);
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            width: 100%;
-            margin-top: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            box-sizing: border-box;
-        }
-
-        button:hover {
-            background-color: var(--ctp-teal);
-            transform: translateY(-2px);
-        }
-
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-
-        .result-display {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: var(--ctp-yellow);
-            padding: 8px;
-            background-color: var(--ctp-crust);
-            border-radius: 8px;
-            border: 1px dashed var(--ctp-surface2);
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        .result-display span {
-            color: var(--ctp-pink);
-            font-size: 1em;
-        }
-
-        /* Error message styling */
-        .error {
-            color: var(--ctp-red) !important;
-            border-color: var(--ctp-red) !important;
-        }
-        .error span {
-            color: var(--ctp-red) !important;
-        }
-
-        /* Watermark Styling */
-        .watermark {
-            margin-top: 20px;
             color: var(--ctp-subtext0);
-            font-size: 0.8em;
+        }
+
+        .result-big {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: clamp(3rem, 8vw, 4.25rem);
+            line-height: 1;
+            color: var(--ctp-green);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .result-unit {
+            display: block;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--ctp-subtext1);
+            margin-top: 4px;
+        }
+
+        .result-sub { font-size: 0.82rem; color: var(--ctp-subtext0); line-height: 1.5; }
+        .result-sub strong { color: var(--ctp-teal); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+        .result-achieved-icon { margin: 0 auto 4px; }
+
+        .result-achieved {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--ctp-green);
+        }
+
+        .btn-primary {
+            min-height: 46px;
+            width: 100%;
+            padding: 0 18px;
+            font: 600 0.92rem 'Inter', system-ui, sans-serif;
+            color: #11111b;
+            background: var(--ctp-green);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.1s ease;
+        }
+
+        .btn-primary:hover { background: var(--ctp-teal); }
+        .btn-primary:active { transform: scale(0.99); }
+
+        .watermark {
+            margin-top: 18px;
+            font-size: 0.78rem;
+            color: var(--ctp-subtext0);
             text-align: center;
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
-            width: 100%; /* Ambil lebar penuh untuk pusatkan teks */
         }
 
-        .watermark a {
-            color: var(--ctp-mauve);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
+        .watermark a { color: var(--ctp-mauve); text-decoration: none; }
+        .watermark a:hover { color: var(--ctp-lavender); text-decoration: underline; text-underline-offset: 3px; }
 
-        .watermark a:hover {
-            color: var(--ctp-lavender);
-        }
+        button { -webkit-tap-highlight-color: transparent; }
 
-        /* --- Media Queries for Responsiveness (HP/Small Screens) --- */
-        @media (max-width: 768px) {
-            html, body {
-                font-size: 14px; /* Slightly smaller base font size for tablets/larger phones */
-            }
-            body {
-                padding-bottom: 25px;
-            }
-            .main-content-wrapper {
-                padding: 15px; /* Kurangi padding di HP */
-                width: 95vw; /* Lebih lebar di HP */
-                max-width: 400px; /* Batasi max-width di HP agar tidak terlalu besar di tablet */
-                max-height: calc(100vh - 55px); /* Sesuaikan tinggi untuk watermark di HP */
-                gap: 10px; /* Kurangi gap antar elemen utama */
-            }
-            h1 {
-                font-size: 1.6em; /* Lebih kecil */
-                margin-bottom: 20px;
-            }
-            .section-box {
-                padding: 15px; /* Kurangi padding di dalam box */
-                gap: 10px; /* Kurangi gap di dalam box */
-                margin-bottom: 10px; /* Kurangi jarak antar box */
-            }
-            .section-title {
-                font-size: 1.2em; /* Lebih kecil */
-                margin-bottom: 8px; /* Lebih kecil */
-            }
-            .input-group label {
-                font-size: 0.8em; /* Lebih kecil */
-            }
-            .input-group input[type="number"] {
-                padding: 6px; /* Lebih kecil */
-                font-size: 0.9em; /* Lebih kecil */
-            }
-            button {
-                padding: 10px 15px; /* Lebih kecil */
-                font-size: 0.95em; /* Lebih kecil */
-                margin-top: 10px; /* Lebih kecil */
-                margin-bottom: 10px; /* Lebih kecil */
-            }
-            .result-display {
-                font-size: 1em; /* Lebih kecil */
-                padding: 6px; /* Lebih kecil */
-            }
-            .result-display span {
-                font-size: 0.95em; /* Lebih kecil */
-            }
-            .watermark {
-                font-size: 0.7em; /* Lebih kecil */
-                bottom: 5px;
-            }
+        @media (max-width: 880px) {
+            .shell { grid-template-columns: 1fr; max-width: 480px; }
+            .panel-result { border-left: none; border-top: 1px solid var(--ctp-surface0); }
+            .panel { padding: 22px; }
         }
 
         @media (max-width: 480px) {
-            html, body {
-                font-size: 13px; /* Even smaller base font size for very small phones */
-            }
-            .main-content-wrapper {
-                padding: 12px;
-                width: 98vw; /* Hampir penuh di HP sangat kecil */
-                max-width: none; /* Izinkan mengambil lebar penuh */
-                max-height: calc(100vh - 50px);
-                gap: 8px;
-            }
-            h1 {
-                font-size: 1.4em;
-                margin-bottom: 15px;
-            }
-            .section-box {
-                padding: 12px;
-                gap: 8px;
-                margin-bottom: 8px;
-            }
-            .section-title {
-                font-size: 1.1em;
-                margin-bottom: 6px;
-            }
-            .input-group label {
-                font-size: 0.75em;
-            }
-            .input-group input[type="number"] {
-                padding: 5px;
-                font-size: 0.8em;
-            }
-            button {
-                padding: 8px 12px;
-                font-size: 0.9em;
-                margin-top: 8px;
-                margin-bottom: 8px;
-            }
-            .result-display {
-                font-size: 0.9em;
-                padding: 5px;
-            }
-            .watermark {
-                font-size: 0.65em;
-            }
+            body { padding: 16px 10px 12px; justify-content: flex-start; }
+            .panel { padding: 18px; }
+            .field-row { grid-template-columns: 1fr; }
+            .brand { gap: 10px; }
+            .gauge-wrap { width: 168px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
         }
     </style>
 </head>
 <body>
-    <div class="main-content-wrapper">
-        <h1>⚔️ Penghitung Winrate MLBB 🛡️</h1>
+    <div class="page">
+        <main class="shell">
+            <section class="panel panel-form" aria-labelledby="appTitle">
+                <header class="brand">
+                    <svg class="emblem" width="52" height="52" viewBox="0 0 48 48" role="img" aria-label="Pedang bersilang">
+                        <g transform="rotate(-45 24 24)" fill="#b4befe">
+                            <path d="M24 3 L27.4 15.5 L27.4 29 L20.6 29 L20.6 15.5 Z"/>
+                            <rect x="14.5" y="29" width="19" height="3.4" rx="1.7"/>
+                            <rect x="22.3" y="32.4" width="3.4" height="6.6" rx="1"/>
+                            <circle cx="24" cy="41.8" r="2.3"/>
+                        </g>
+                        <g transform="rotate(45 24 24)" fill="#9399b2">
+                            <path d="M24 3 L27.4 15.5 L27.4 29 L20.6 29 L20.6 15.5 Z"/>
+                            <rect x="14.5" y="29" width="19" height="3.4" rx="1.7"/>
+                            <rect x="22.3" y="32.4" width="3.4" height="6.6" rx="1"/>
+                            <circle cx="24" cy="41.8" r="2.3"/>
+                        </g>
+                    </svg>
+                    <div>
+                        <h1 id="appTitle">Penghitung Winrate <span class="mlbb">MLBB</span></h1>
+                        <p class="tagline">Berapa kemenangan beruntun untuk mencapai target winrate Anda.</p>
+                    </div>
+                </header>
 
-        <div class="section-box">
-            <h2 class="section-title">Masukkan Data Anda</h2>
-            <div class="input-group">
-                <label for="totalMatches">Total Match Anda:</label>
-                <input type="number" id="totalMatches" placeholder="Cth: 1500" min="0">
-            </div>
+                <form id="wrForm" novalidate>
+                    <div class="field">
+                        <label for="totalMatches">Total match</label>
+                        <input type="number" id="totalMatches" min="1" step="1" inputmode="numeric" placeholder="1500" autocomplete="off" aria-describedby="derivedWins errTotal">
+                        <p class="field-hint" id="derivedWins"></p>
+                        <p class="field-error" id="errTotal" role="alert" hidden></p>
+                    </div>
 
-            <div class="input-group">
-                <label for="currentWinrate">Winrate Anda Saat Ini (%):</label>
-                <input type="number" id="currentWinrate" placeholder="Cth: 75.6" step="0.1" min="0" max="100">
-            </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="currentWinrate">Winrate saat ini</label>
+                            <div class="control has-suffix">
+                                <input type="number" id="currentWinrate" min="0" max="100" step="0.1" inputmode="decimal" placeholder="75.6" autocomplete="off" aria-describedby="errCur">
+                                <span class="suffix" aria-hidden="true">%</span>
+                            </div>
+                            <p class="field-error" id="errCur" role="alert" hidden></p>
+                        </div>
 
-            <div class="input-group">
-                <label for="targetWinrate">Winrate yang Anda Inginkan (%):</label>
-                <input type="number" id="targetWinrate" placeholder="Cth: 80.5" step="0.1" min="0" max="100">
-            </div>
-        </div>
+                        <div class="field">
+                            <label for="targetWinrate">Target winrate</label>
+                            <div class="control has-suffix">
+                                <input type="number" id="targetWinrate" min="0" max="100" step="0.1" inputmode="decimal" placeholder="80.5" autocomplete="off" aria-describedby="errTarget">
+                                <span class="suffix" aria-hidden="true">%</span>
+                            </div>
+                            <div class="chips" role="group" aria-label="Target cepat">
+                                <button type="button" class="chip" data-target="50" aria-pressed="false">50%</button>
+                                <button type="button" class="chip" data-target="60" aria-pressed="false">60%</button>
+                                <button type="button" class="chip" data-target="70" aria-pressed="false">70%</button>
+                                <button type="button" class="chip" data-target="80" aria-pressed="false">80%</button>
+                            </div>
+                            <p class="field-error" id="errTarget" role="alert" hidden></p>
+                        </div>
+                    </div>
 
-        <button onclick="calculateWinrate()">🔥 Hitung</button>
+                    <div class="form-actions">
+                        <button type="button" class="btn-ghost" id="resetBtn">Atur ulang</button>
+                    </div>
 
-        <div class="section-box">
-            <h2 class="section-title">Hasil Perhitungan</h2>
-            <p id="matchesNeeded" class="result-display"></p> 
-            </div>
+                    <p class="formula">Rumus: winrate akhir = (menang + N) / (total + N), dicari N terkecil yang tidak di bawah target.</p>
+                </form>
+            </section>
+
+            <section class="panel panel-result" aria-labelledby="resultLabel">
+                <p class="result-label" id="resultLabel">Hasil perhitungan</p>
+
+                <div class="gauge-wrap">
+                    <svg class="gauge" viewBox="0 0 180 180" role="img" aria-label="Gauge winrate: busur menunjukkan winrate saat ini, garis menunjukkan target">
+                        <defs>
+                            <linearGradient id="gaugeGrad" x1="0" y1="1" x2="1" y2="0">
+                                <stop offset="0" stop-color="#a6e3a1"/>
+                                <stop offset="1" stop-color="#94e2d5"/>
+                            </linearGradient>
+                        </defs>
+                        <path class="gauge-track" pathLength="100" d="M 53 154.1 A 74 74 0 1 1 127 154.1"/>
+                        <path class="gauge-value" id="gaugeArc" pathLength="100" d="M 53 154.1 A 74 74 0 1 1 127 154.1"/>
+                        <g class="target-tick" id="targetTick" transform="rotate(210 90 90)" opacity="0">
+                            <line x1="90" y1="2" x2="90" y2="22"/>
+                        </g>
+                        <text class="gauge-end" x="46" y="172" text-anchor="middle">0</text>
+                        <text class="gauge-end" x="134" y="172" text-anchor="middle">100</text>
+                    </svg>
+                    <div class="gauge-center">
+                        <output class="gauge-number" id="gaugeNumber">–</output>
+                        <span class="gauge-caption">winrate saat ini</span>
+                    </div>
+                </div>
+
+                <div class="legend" aria-hidden="true">
+                    <span><i class="dot dot-current"></i>Saat ini</span>
+                    <span><i class="dot dot-target"></i>Target</span>
+                </div>
+
+                <div class="result-body" id="resultBody" aria-live="polite"></div>
+
+                <button class="btn-primary" id="copyBtn" type="button" hidden>Salin hasil</button>
+            </section>
+        </main>
+
+        <footer class="watermark">Made with ♥ by <a href="https://www.instagram.com/adamtsumagami/" target="_blank" rel="noopener noreferrer">Adam Tsumagami</a></footer>
     </div>
 
-    <p class="watermark">Made with ♥ by <a href="https://www.instagram.com/adamtsumagami/" target="_blank" rel="noopener noreferrer">Adam Tsumagami</a></p>
-
     <script>
-        function calculateWinrate() {
-            const totalMatchesInput = document.getElementById('totalMatches');
-            const currentWinrateInput = document.getElementById('currentWinrate');
-            const targetWinrateInput = document.getElementById('targetWinrate');
-            
-            const matchesNeededElement = document.getElementById('matchesNeeded');
-            
-            // Reset error state (cukup remove class error)
-            matchesNeededElement.classList.remove('error');
+        const ARC = 100; // pathLength normalizes both arc paths
+        const GAUGE_START = 210; // degrees clockwise from 12 o'clock; gap centered at the bottom
+        const GAUGE_SWEEP = 300;
+        const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const STORAGE_KEY = 'wr-mlbb';
 
-            const totalMatches = parseFloat(totalMatchesInput.value);
-            const currentWinrate = parseFloat(currentWinrateInput.value);
-            const targetWinrate = parseFloat(targetWinrateInput.value);
+        const els = {
+            form: document.getElementById('wrForm'),
+            total: document.getElementById('totalMatches'),
+            current: document.getElementById('currentWinrate'),
+            target: document.getElementById('targetWinrate'),
+            derivedWins: document.getElementById('derivedWins'),
+            errTotal: document.getElementById('errTotal'),
+            errCur: document.getElementById('errCur'),
+            errTarget: document.getElementById('errTarget'),
+            gaugeArc: document.getElementById('gaugeArc'),
+            gaugeNumber: document.getElementById('gaugeNumber'),
+            targetTick: document.getElementById('targetTick'),
+            resultBody: document.getElementById('resultBody'),
+            copyBtn: document.getElementById('copyBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            chips: Array.from(document.querySelectorAll('.chip')),
+        };
 
-            // --- Validasi Input ---
-            if (isNaN(totalMatches) || totalMatches < 0) {
-                matchesNeededElement.textContent = "Total match tidak valid!";
-                matchesNeededElement.classList.add('error');
-                return;
-            }
+        // Indonesian keyboards type decimal comma; normalize both separators
+        function num(el) {
+            const raw = el.value.trim().replace(',', '.');
+            return raw === '' ? NaN : Number(raw);
+        }
 
-            if (isNaN(currentWinrate) || currentWinrate < 0 || currentWinrate > 100) {
-                matchesNeededElement.textContent = "Winrate Anda tidak valid (0-100)!";
-                matchesNeededElement.classList.add('error');
-                return;
-            }
+        function fieldError(input, errEl, message) {
+            errEl.textContent = message || '';
+            errEl.hidden = !message;
+            input.setAttribute('aria-invalid', message ? 'true' : 'false');
+        }
 
-            if (isNaN(targetWinrate) || targetWinrate < 0 || targetWinrate > 100) {
-                matchesNeededElement.textContent = "Target winrate tidak valid (0-100)!";
-                matchesNeededElement.classList.add('error');
-                return;
-            }
+        function readInputs() {
+            const total = num(els.total);
+            const current = num(els.current);
+            const target = num(els.target);
 
-            // --- Logika Perhitungan Jumlah Kemenangan Beruntun ---
-            const totalWins = totalMatches * (currentWinrate / 100);
-            const targetDecimal = targetWinrate / 100;
+            fieldError(els.total, els.errTotal,
+                isNaN(total) ? null : (total < 1 ? 'Total match minimal 1.' : null));
+            fieldError(els.current, els.errCur,
+                isNaN(current) ? null : (current < 0 || current > 100 ? 'Harus antara 0 sampai 100.' : null));
+            fieldError(els.target, els.errTarget,
+                isNaN(target) ? null : (target < 0 || target > 100 ? 'Harus antara 0 sampai 100.' : null));
 
-            if (currentWinrate >= targetWinrate) {
-                matchesNeededElement.innerHTML = `Anda sudah mencapai (${currentWinrate.toFixed(2)}%) atau melampaui target (${targetWinrate.toFixed(2)}%)!`;
-                matchesNeededElement.classList.remove('error'); 
-                return;
-            }
+            const totalOk = !isNaN(total) && total >= 1;
+            const curOk = !isNaN(current) && current >= 0 && current <= 100;
+            const tgtOk = !isNaN(target) && target >= 0 && target <= 100;
 
-            let winsNeeded;
-            if (targetDecimal === 1) { // Jika targetnya 100%
-                if (currentWinrate === 100) {
-                    winsNeeded = 0; // Sudah 100%
-                } else {
-                    matchesNeededElement.innerHTML = `Butuh tak terbatas Win untuk mencapai 100% Winrate dari posisi ini!`;
-                    matchesNeededElement.classList.remove('error');
-                    return;
-                }
-            } else if (1 - targetDecimal <= 0) { // Safety check for division by zero or negative denominator
-                 matchesNeededElement.textContent = `Tidak dapat menghitung untuk target Winrate ini.`;
-                 matchesNeededElement.classList.add('error');
-                 return;
+            return {
+                total: totalOk ? total : null,
+                current: curOk ? current : null,
+                target: tgtOk ? target : null,
+                anyInvalid: [els.total, els.current, els.target].some(i => i.getAttribute('aria-invalid') === 'true'),
+            };
+        }
+
+        function setGauge(current, target) {
+            if (current === null || current === 0) {
+                els.gaugeArc.style.strokeDashoffset = ARC;
+                els.gaugeArc.style.opacity = '0';
+                els.gaugeNumber.textContent = current === 0 ? '0%' : '–';
             } else {
-                winsNeeded = (totalMatches * targetDecimal - totalWins) / (1 - targetDecimal);
+                els.gaugeArc.style.opacity = '1';
+                els.gaugeArc.style.strokeDashoffset = ARC * (1 - current / 100);
+                els.gaugeNumber.textContent = current.toLocaleString('id-ID', { maximumFractionDigits: 1 }) + '%';
             }
-            
-            if (winsNeeded < 0) {
-                matchesNeededElement.innerHTML = `Anda sudah mencapai atau melampaui target!`; 
-                matchesNeededElement.classList.remove('error');
+            if (target === null) {
+                els.targetTick.setAttribute('opacity', '0');
             } else {
-                // Diperbaiki: Seluruh teks termasuk angka dihasilkan oleh JavaScript
-                matchesNeededElement.innerHTML = `Butuh sekitar <span>${Math.ceil(winsNeeded)}</span> Win.`;
+                els.targetTick.setAttribute('opacity', '1');
+                els.targetTick.setAttribute('transform', `rotate(${GAUGE_START + (target / 100) * GAUGE_SWEEP} 90 90)`);
             }
         }
+
+        function setChips(target) {
+            els.chips.forEach(chip => {
+                chip.setAttribute('aria-pressed', String(Number(chip.dataset.target) === target));
+            });
+        }
+
+        function animateStreak(value) {
+            const out = document.getElementById('streakNumber');
+            if (!out) return;
+            if (REDUCED.matches || value <= 0) { out.textContent = value; return; }
+            const dur = 500, t0 = performance.now();
+            function tick(t) {
+                const p = Math.min((t - t0) / dur, 1);
+                const eased = 1 - Math.pow(2, -10 * p);
+                out.textContent = String(Math.round(value * (p === 1 ? 1 : eased)));
+                if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        let lastSummary = null;
+
+        function calculate() {
+            const { total, current, target, anyInvalid } = readInputs();
+
+            els.derivedWins.textContent = (total !== null && current !== null)
+                ? `≈ ${Math.round(total * current / 100).toLocaleString('id-ID')} menang dari ${Math.floor(total).toLocaleString('id-ID')} match`
+                : '';
+            setGauge(current, target);
+            setChips(target);
+            els.copyBtn.hidden = true;
+            lastSummary = null;
+
+            if (anyInvalid) {
+                els.resultBody.innerHTML = '<p class="result-error">Periksa kolom yang ditandai merah.</p>';
+                return;
+            }
+            if (total === null || current === null || target === null) {
+                els.resultBody.innerHTML = '<p class="result-idle">Isi total match, winrate saat ini, dan target.<br>Hitungan muncul otomatis.</p>';
+                return;
+            }
+
+            const totalWins = total * (current / 100);
+            const targetDec = target / 100;
+            const fmt = n => n.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+
+            if (current >= target) {
+                const head = 'Target sudah tercapai';
+                els.resultBody.innerHTML = `
+                    <svg class="result-achieved-icon" width="40" height="40" viewBox="0 0 40 40" role="img" aria-label="Target tercapai">
+                        <circle cx="20" cy="20" r="18" fill="none" stroke="#a6e3a1" stroke-width="2.5"/>
+                        <path d="M12.5 20.5 L17.5 25.5 L28 14.5" fill="none" stroke="#a6e3a1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p class="result-achieved">${head}</p>
+                    <p class="result-sub">Winrate Anda <strong>${fmt(current)}%</strong>, target <strong>${fmt(target)}%</strong>.</p>`;
+                lastSummary = `Winrate saya ${fmt(current)}% sudah mencapai target ${fmt(target)}% (${Math.floor(total).toLocaleString('id-ID')} match).`;
+                els.copyBtn.hidden = false;
+                return;
+            }
+
+            if (target === 100) {
+                els.resultBody.innerHTML = `
+                    <p class="result-kicker">Target 100%</p>
+                    <p class="result-achieved" style="color: var(--ctp-yellow)">Tidak mungkin</p>
+                    <p class="result-sub">Win beruntun berapa pun tidak menghapus kekalahan yang sudah tercatat. Target di bawah 100%.</p>`;
+                lastSummary = null;
+                return;
+            }
+
+            const winsNeeded = (total * targetDec - totalWins) / (1 - targetDec);
+            const streak = Math.ceil(winsNeeded);
+            const projected = (totalWins + streak) / (total + streak) * 100;
+
+            els.resultBody.innerHTML = `
+                <p class="result-kicker">Dibutuhkan</p>
+                <p class="result-big"><output id="streakNumber">0</output><span class="result-unit">win beruntun</span></p>
+                <p class="result-sub">Winrate menjadi <strong>≈ ${fmt(projected)}%</strong> setelah streak ini.</p>`;
+            animateStreak(streak);
+
+            lastSummary = `Total match: ${Math.floor(total).toLocaleString('id-ID')} | Winrate saat ini: ${fmt(current)}% | Target: ${fmt(target)}% | Butuh ${streak} win beruntun (menjadi ≈ ${fmt(projected)}%).`;
+            els.copyBtn.hidden = false;
+        }
+
+        function save() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ t: els.total.value, c: els.current.value, g: els.target.value }));
+            } catch { /* private mode: persistence is best-effort */ }
+        }
+
+        function restore() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+                if (!saved) return;
+                if (typeof saved.t === 'string') els.total.value = saved.t;
+                if (typeof saved.c === 'string') els.current.value = saved.c;
+                if (typeof saved.g === 'string') els.target.value = saved.g;
+            } catch { /* corrupted entry: start fresh */ }
+        }
+
+        els.form.addEventListener('input', () => { calculate(); save(); });
+        els.form.addEventListener('submit', e => { e.preventDefault(); calculate(); });
+
+        els.chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                els.target.value = chip.dataset.target;
+                calculate();
+                save();
+            });
+        });
+
+        els.resetBtn.addEventListener('click', () => {
+            els.total.value = '';
+            els.current.value = '';
+            els.target.value = '';
+            try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+            calculate();
+            els.total.focus();
+        });
+
+        els.copyBtn.addEventListener('click', async () => {
+            if (!lastSummary) return;
+            const text = `Penghitung Winrate MLBB\n${lastSummary}`;
+            let copied = false;
+            try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+            } catch {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                try { copied = document.execCommand('copy'); } catch { copied = false; }
+                ta.remove();
+            }
+            els.copyBtn.textContent = copied ? 'Tersalin!' : 'Gagal menyalin';
+            setTimeout(() => { els.copyBtn.textContent = 'Salin hasil'; }, 1600);
+        });
+
+        restore();
+        calculate();
     </script>
 </body>
 </html>
