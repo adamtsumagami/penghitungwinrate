@@ -38,7 +38,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html { -webkit-text-size-adjust: 100%; }
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
         body {
             font-family: 'Inter', system-ui, sans-serif;
@@ -49,12 +49,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 32px 16px 16px;
+            padding: max(28px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
             background:
                 radial-gradient(1100px 700px at 12% -12%, rgba(203, 166, 247, 0.16), transparent 60%),
                 radial-gradient(900px 650px at 112% 112%, rgba(137, 180, 250, 0.13), transparent 55%),
                 linear-gradient(160deg, var(--ctp-crust) 0%, var(--ctp-base) 75%);
-            background-attachment: fixed;
             overflow-x: hidden;
         }
 
@@ -92,7 +91,7 @@
 
         .panel { padding: 28px; }
 
-        .panel-form { display: flex; flex-direction: column; }
+        .panel-form { display: flex; flex-direction: column; justify-content: center; }
 
         .panel-result {
             background: var(--ctp-mantle);
@@ -228,15 +227,6 @@
         }
 
         .form-actions { display: flex; justify-content: flex-end; }
-
-        .formula {
-            margin-top: auto;
-            padding-top: 14px;
-            border-top: 1px solid var(--ctp-surface0);
-            font-size: 0.7rem;
-            line-height: 1.5;
-            color: var(--ctp-overlay2);
-        }
 
         .btn-ghost {
             min-height: 44px;
@@ -400,20 +390,27 @@
         .watermark a { color: var(--ctp-mauve); text-decoration: none; }
         .watermark a:hover { color: var(--ctp-lavender); text-decoration: underline; text-underline-offset: 3px; }
 
-        button { -webkit-tap-highlight-color: transparent; }
+        button, .chip, a { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 
         @media (max-width: 880px) {
             .shell { grid-template-columns: 1fr; max-width: 480px; }
             .panel-result { border-left: none; border-top: 1px solid var(--ctp-surface0); }
             .panel { padding: 22px; }
+            .panel-form { justify-content: flex-start; }
         }
 
         @media (max-width: 480px) {
-            body { padding: 16px 10px 12px; justify-content: flex-start; }
+            body {
+                padding: 16px max(10px, env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+                justify-content: flex-start;
+            }
             .panel { padding: 18px; }
             .field-row { grid-template-columns: 1fr; }
             .brand { gap: 10px; }
-            .gauge-wrap { width: 168px; }
+            .brand h1 { font-size: 1.3rem; }
+            .emblem { width: 44px; height: 44px; }
+            .gauge-wrap { width: min(168px, 52vw); }
+            .chips { flex-wrap: wrap; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -484,7 +481,6 @@
                         <button type="button" class="btn-ghost" id="resetBtn">Atur ulang</button>
                     </div>
 
-                    <p class="formula">Rumus: winrate akhir = (menang + N) / (total + N), dicari N terkecil yang tidak di bawah target.</p>
                 </form>
             </section>
 
